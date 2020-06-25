@@ -147,7 +147,33 @@ In \bbp, I used BFS to the trees obtained by DFS (Figure \ref{fig:bubblepop.png}
 %distance of a.... leave?
 In particular with BFS I calculated the distance of a node from the root node of the tree and stored this information in a dictionary, i.e. a table of correspondence (Figure \ref{fig:bubblepop.png}). 
 
-%%%%% IMPORTANTE: tutt ala perte di come ordini le bubbles e scegli il riferimento?? in pratica la ricostruzione della sequenza? 
+
+\subsubsection{\bbc}
+Once the pangenome has been decomposed with \bbp in a set of trees whose information are stored in dictionary, \bbp make explicit the content of the bubbles and its position along a chosen reference sequence.    
+
+Within the dictionary, the beginning and the end nodes of a bubbles are identified by the fact that their distance from the root is uniqe, i.e. they are the only nodes with a specific distance from the tree. (Figure \ref{fig:bubblepop.png}C). All other nodes are  inner nodes of bubbles and correspond to variable regions of the sequence, furthermore nodes with the same distance from the root are in the same bubble.\\
+
+\bbc works in X steps
+
+\begin{itemize}
+
+
+\item\textbf{Possible paths and reference }
+Considering all the possible paths %COME SI FA? v aspiegato % 
+As implemented now, the first path in the GFA file is used as reference, however it is possible to set any available paths as reference.
+
+\item{variant calling }  A variant is a nodes supported by at least one path, whose sequence is different from the sequence of the corresponding node in the chosen reference.
+
+\item\textbf{SNV and INDEL}
+For Deletion if the considerate node in the REF is the current node in the current path, it means that in the current path a node is missing, so there is a deletion respect to the REF.
+For Insertion if the considerate node in the current path is the current node in the ref, it means that in the current path there is a node that is missing in the REF, that is an insertion.
+
+For SNV if the sequence are different in the current path respect to the REF.
+
+\item \textbf{variant positioning} The variants are called respect to a path chosen as reference%NON E' vero, la posizione e' rispetto al REF .
+\end{itemize}
+
+%I obtained VCF.
 
 
 
@@ -158,44 +184,13 @@ In particular with BFS I calculated the distance of a node from the root node of
 %  Subsection 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\setcounter{secnumdepth}{3}
 \subsection{gfa2vcf}
 %tolto the second, non c'e un ordine 
-The \textit{gfa2vcf} function of \vgp takes as input a graph in the GFA format and output a corresponding linear representation in the VCF format. To do this \textit{gfa2vcf} uses first \bbp, and then \bbc a function that make explicit the content of the bubbles and its position along a chosen reference sequence.    
-I used the information contained in the dictionary produced using \bbp to transform the information of the graph in a linear format. 
+The \textit{gfa2vcf} function of \vgp takes as input a graph in the GFA format and output a corresponding linear representation in the VCF format. To do this \textit{gfa2vcf} uses first \bbp to decompose the pangenome in a set of trees and then \bbc to transform the information of the graph in a linear format. 
 
 
-\setcounter{secnumdepth}{3}
-%forse questo paragrafo serve qui? 
-\subsubsection{\bbc}
-Once the pangenome has been decomposed with \bbp in a set of trees whose information are stored in dictionary, \bbp make explicit the content of the bubbles and its position along a chosen reference sequence.    
-
-Within the dictionary, the beginning and the end nodes of a bubbles are identified by the fact that their distance from the root is uniqe, i.e. they are the only nodes with a specific distance from the tree. (Figure \ref{fig:bubblepop.png}C). All other nodes are  inner nodes of bubbles and correspond to variable regions of the sequence, furthermore nodes with the same distance from the root are in the same bubble. 
-
-
-
-
-
-\subsubsection{Extracting Variant}
-%"""QUESTO È VARIANT CALLING, QUINDI NON VA BENE"""Variant calling is the process of identifying genetic variants. First, sequence reads from one individual are aligned against the reference genome, then variable sites are identified as the ones where the sequence differs from the reference genome.
-
-\begin{itemize}
-\item\textbf{Possible paths}
-
-Considering all the possible paths, the variants have been called respect to a path chosen as reference. A variant is a nodes supported by at least one path, whose sequence is different from the sequence of the corresponding node in the chosen reference.
-
-\item\textbf{SNV and INDEL}
-
-For Deletion if the considerate node in the REF is the current node in the current path, it means that in the current path a node is missing, so there is a deletion respect to the REF.
-For Insertion if the considerate node in the current path is the current node in the ref, it means that in the current path there is a node that is missing in the REF, that is an insertion.
-
-For SNV if the sequence are different in the current path respect to the REF.
-\end{itemize}
-
-I obtained VCF.
-
-
-%va completata con una parte che fa vedere il GFA e se vuoi il VCF risulatante da questa bolla
+%PER LA FIGURA: va completata con una parte che fa vedere il GFA e se vuoi il VCF risulatante da questa bolla forse si puo' mettere questo esempio semplice e uno piu' complesso 
 \begin{figure}[H]
 \centering
 \includegraphics[width=1.10\textwidth]{fig/GraphchrXnew.pdf}
@@ -204,19 +199,21 @@ I obtained VCF.
 \label{fig:bubble.png}
 \end{figure}
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=1.10\textwidth]{fig/gfatovcfnew.pdf}
-\decoRule
-\caption{\textbf{Graph} GfatoVcf}
-\label{fig:vgpop.pdf}
-\end{figure}
+
+%FIGURA FORSE NON necessaria 
+%\begin{figure}[H]
+%\centering
+%\includegraphics[width=1.10\textwidth]{fig/gfatovcfnew.pdf}
+%\decoRule
+%\caption{\textbf{Graph} GfatoVcf}
+%\label{fig:vgpop.pdf}
+%\end{figure}
 
 
-
+% non erano  chiare le definizioni di GFA, rest ail dubbio su SNV indel 
 {\small
 \begin{table}
-\caption{gfa2vcf}
+\caption{Correspondences between elements of the GFA and VCF}
 \label{tab:gfatovcf}
 \centering
 \begin{adjustbox}{width=0.50\textwidth}
@@ -225,9 +222,11 @@ I obtained VCF.
 \tabhead{GFA} & \tabhead{VCF} \\
 \midrule
  Path Name & CHROM \\
- Length of sequence & POS \\
- Path Chose & REF \\
- Center of bubble & ALT \\
+ Position in the reference sequence & POS \\
+ Sequence of bubble's inner nodes & REF allele  \\
+  that is present in the path chosen as reference  &  \\
+ Sequence of bubble's inner nodes & ALT allele  \\
+  that is NOT present in the path chosen as reference  &  \\
  SNV, INDEL & Type\\
 \bottomrule\\
 \end{tabular}
@@ -235,38 +234,26 @@ I obtained VCF.
 \end{table}
 }
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Subsubsection 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%non farei una sub sub section 
+%\subsubsection{Validation of the VCF obtained with \textit{gfa2vcf}}
+To validate the VCF obtaind using \textit{gfa2vcf}, I reconstructed a graph starting from it and using an existing tool, i.e. the functions \textit{vgconstruct} and \textit{vgview} from the \textsc{vgtool} library (Figure \ref{fig:validationgraph.png}A, adapted from \cite{vg}, (QUESTA VA COME REFERENZA \url{https://nicedoc.io/vgteam/vg}). Visual comparison of the graph used as input of \textit{gfa2vcf} and the one reconstructed with \textsc{vgtool}, shows a complete correspondence of the two graphs, suggesting that the \textit{gfa2vcf} works well (Figure \ref{fig:validationgraph.png}B).  
 
-\subsubsection{Validation of the VCF obtained with \textit{gfa2vcf}}
+%PERCHE' ripeter la definizione id variaton graphs?
+%Variation graphs provide a succinct encoding of the sequences of many genomes. 
+%A variation graph (in particular as implemented in vg) is composed of:
+%\begin{itemize}
+%\item nodes: which are labeled by sequences and ids
+%\item edges: which connect two nodes via either of their respective ends
+%\item paths: describe genomes, sequence alignments, and annotations (such as gene models and transcripts) as walks through nodes connected by edges
+%\end{itemize}
+%Tools in vg maintain paths as immutable during transformations of the graph. They use paths to project graph-relative data into reference-relative coordinate spaces. Paths provide stable coordinates for graphs built in different ways from the same input sequences.
 
-For validation VCF I use (\url{https://nicedoc.io/vgteam/vg}) Variation graphs provide a succinct encoding of the sequences of many genomes. 
-A variation graph (in particular as implemented in vg) is composed of:
-\begin{itemize}
-\item nodes: which are labeled by sequences and ids
-    
-\item edges: which connect two nodes via either of their respective ends
-   
-\item paths: describe genomes, sequence alignments, and annotations (such as gene models and transcripts) as walks through nodes connected by edges
-
-Tools in vg maintain paths as immutable during transformations of the graph. They use paths to project graph-relative data into reference-relative coordinate spaces. Paths provide stable coordinates for graphs built in different ways from the same input sequences.
-
-\end{itemize}
-I used vg tool (adapted from \cite{vg}) to work with genome variation graphs for validate the VCF files obtained with the \textit{gfa2vcf} function. To date, the first path in the GFA file is used as reference; in the next updates, it will be possible to set any available paths.
-GFAstart(\ref{fig:validationgraph.png}A), is the input of \textit{gfa2vcf} function, and output of this function i.e VCF format is the input of the following commands.  
-
-As output of vg I obtained GFA (\ref{fig:validationgraph.png}B, ) similar to GFAstart. 
-
-\textit{gfa2vcf} works well. 
-
-
-
+%%cambiare GFA start con GFA from \vgp  e GFA con GFA from \textsc{vgtools} DIDALSCALIA GIA@ CAMBIATA  
 \begin{figure}[H]
 \centering
 \includegraphics[width=1.00 \textwidth]{fig/validationgfa2.vcf.png}
 \decoRule
-\caption{\textit{gfa2vcf} transforms a GFAstart in VCF.I use this for validate this result(\textbf{A}). GFAstart end GFA are equal (\textbf{B})}
+\caption{Validation scheme of the \textit{gfa2vcf} function (\textbf{A}). the graph used as input from \vgp is identical to the one reconstructed using \textsc{vgtools} from the VCF obtained by \textit{gfa2vcf} (\textbf{B})}
 \label{fig:validationgraph.png}
 \end{figure}
 
@@ -276,18 +263,27 @@ As output of vg I obtained GFA (\ref{fig:validationgraph.png}B, ) similar to GFA
 
 \subsection{gfa2allelefreq} 
 
-Allele frequency gives us indication on how common an allele is in a population. It is calculated by counting how many times the allele appears in the population, dividing by the total number of copies of the gene.
+The \textbf{frequency of an allele} is an indication of how common the allele is in a population. It is calculated by counting how many times the allele appears in the population, dividing by the total number of copies of the gene.\\
 
-Haploids    $p = \dfrac{i}{N}$
+For a locus with \emph{p} alleles, the allele frequency of the \emph{i\textsubscript{th}} allele \emph{p\textsubscript{i}} in a population of haploid individuals is: \\
 
-Diploids   
+Haploid allele frequency    $p\textsubscript{i} = \dfrac{i}{N}$\\
 
-frequency of A $p = {f(AA)} + \dfrac{1}{2} f(AB)$
+\noindent
+where \emph{i} is the count of the alleles and \emph{N} is the number of individuals in the population.\\
+\noindent
+In a diploid populations the formula becomes: \\
 
-frequency of B $q = {f(BB)} + \dfrac{1}{2} f(AB)$
+Diploid allele frequency  $p\textsubscript{i} =  \dfrac{i}{2N}$$\\
 
-The third function of \vgp is the \textit{gfa2allelefreq} , which takes as input a GFA format, and as output a file that contains the calculation of allele frequencies.
-In this specific case I obtained two file of calculation, one from each population. 
+%The \textbf{frequency of a genotype} is the count of the genotype occurrence in the population. A locus with two alleles, \textit{A} and \textit{B} has three possible genotypes: \textit{AA, AB, BB}.  
+%frequency of B $q = {f(BB)} + \dfrac{1}{2} f(AB)$
+
+The \textit{gfa2allelefreq} function of \vgp takes as input a GFA format and output a file that contains the calculation of allele frequencies for variable loci. In \textit{gfa2allelefreq} the allele frequency correspond to the 
+
+
+
+%In this specific case I obtained two file of calculation, one from each population. 
 
 This calculation start with \textit{bubblepop}, after detection of bubble I calculate allele frequencies, for each variants the number of  paths  are  calculate  that  support  the  variant node divided  by  total  number  of  paths(considered even REF).
 Only allele frequencies different from 1 were considered. 
