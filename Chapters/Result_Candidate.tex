@@ -86,7 +86,7 @@ gfa2fst & Calculation of F\textsubscript{ST} & GFA & fstfile\\
 \end{table}
 }
 
-\vspace{1cm}
+%\vspace{1cm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Subsection 
@@ -95,9 +95,14 @@ gfa2fst & Calculation of F\textsubscript{ST} & GFA & fstfile\\
 
 \subsection{Bubblepop}
 
-The core of \vgp is the \bbp function, which takes as input a pangenome, detects sequence regions where more that one type of sequence is present (i.e. variable sites), and outputs the sequences of the variants. Because of their appearance in the pangenome graph, these regions are referred to as bubbles (Figure \ref{fig:gfa.png}). \\
+The main challenge of my project was to extract the information about variable sites (i.e. regions where more that one type of sequence is present) from the graphs. Any population genetic analysis is in fact based on the information contained in the variable segments of the sequence and their occurrence in the population under investigation. Because of their appearance in the pangenome graph, variable sites are referred to as bubbles (Figure \ref{fig:gfa.png}). \\
 
-\bbp takes as input a GFA file and gives as output a dictionary. It explores the graph using the two recursive algorithms described in the two following paragraphs.
+The core of \vgp is the \bbp function, which takes as input a pangenome, detects bubbles, and outputs the sequences of the variants contained in the bubbles.
+
+\bbp takes as input a GFA file and gives as output a dictionary, i.e. a table of correspondences between region of the graph and sequence variants. It explores the graph using the two recursive algorithms described in the following paragraphs and works in two consecutive steps. 
+
+%% non servono le lettere, zzom dalontano, graph piu' complesso senza dettaglio si fa vdere DFS sceglie un nodo  eesplora a casa un pezzoee  
+%tree con root piu' lontana, aggiungere un pezzo di root 
 
 \begin{figure}[H]
 \centering
@@ -108,46 +113,44 @@ The core of \vgp is the \bbp function, which takes as input a pangenome, detects
 \end{figure}
 
 
-
-
 \setcounter{secnumdepth}{3}
-\subsubsection{Depth first Search}
+\subsubsection{Step 1: Depth first Search}
 
-I use two recursive algorith \cite{geeksforgeeks.org}.%questo e' un sito generico
+%I use two recursive algorith \cite{geeksforgeeks.org}.%questo e' un sito generico
+The Depth First Search (DFS) \cite{korf1985depth,wiki:DFS} is a recursive algorithm for searching graph data structures. DFS select an arbitrary node as root node and explores as far as possible along each branch. The exploration process runs until some depth cutoff is reached, and then DFS backtracks to the next most recently expanded node. Therefore, only the path of nodes from the initial  node to the current  node  must be stored in order to execute the algorithm (Figure \ref{fig:bubblepop.png}A))
 
+%vertex==node? non capisco questo paragrafo
+DFS marks each vertex of a graph as visited. With this, start by one of the vertices of the graph in a stack. Take the item on top of the stack and add it to the list visited. Create a list of the adjacent nodes of that vertex. Add node that is not in the visited list.\\
 
-Depth First Search (DFS) \cite{korf1985depth} is a recursive algorithm for searching graph data structures. (Figure \ref{fig:bubblepop.png}A)) . 
-It is an algorithm for traversing or searching tree or graph data structures. The algorithm starts at the root node (selecting some arbitrary node as the root node in the case of a graph) and explores as far as possible along each branch before backtracking.\cite{wiki:DFS}
+In \bbp I use the DFS algorithm to explore the graph starting from a random node of the pangenome. At each iteration, \bbp creates a spanning tree from the part of the pangenome that is explored (Figure \ref{fig:bubblepop.png}B), threfore transforming the pangenome in a set of trees.\\ %vediamo meglio questo: Starting from the pangenome graph, with the DFS algorithm a spanning tree of its vertices is obtained.\\
 
-This algorithm mark each vertex of a graph as visited. With this, start by one of the vertices of the graph in a stack. Take the item on top of the stack and add it to the list visited. Create a list of the adjacent nodes of that vertex. Add node that is not in the visited list.
+A tree is an entity that describes relationships between objects (Figure \ref{fig:phylogenies.jpg}). The tips of the tree are called leaves; leaves are connected by branches, whose length is proportional to the observed differences between the leaves; the coalescence of two branches generates a node or vertex. In phylogeny and evolutionary genetics the nodes indicate the most common ancestor of sequences. In trees obtained from pangenomes, the branches are obtained by resolving the bubble in its edges components and the nodes represent chunks of sequences, the root of the tree is a special node located at the beginning of the tree. 
 
-In \textit{bubblepop} I use the DFS algorithm to create a spanning tree from a pangenome, starting from a random node of the pangenome (Figure \ref{fig:bubblepop.png}B) %Starting from the pangenome graph, with the DFS algorithm a spanning tree of its vertices is obtained.\\
-
-
-
-\subsubsection{Breadth first Search}
-Breadth First Search (BFS) \cite{beamer2012direction} is another recursive algorithm that works on tree that I obtained from DFS.(\ref{fig:bubblepop.png}B)
-
-It is an algorithm for traversing or searching tree or graph data structures. It starts at the tree root, and explores all of the neighbor nodes at the present depth prior to moving on to the nodes at the next depth level.\cite{wiki:BFS}
-
-With this start by putting any one of the three's vertices at the back of a queue.
-Take the front item of the queue and add it to the visited list.
-Create a list of that vertex's adjacent nodes. Add the ones which aren't in the visited list to the back of the queue. \url{https://www.programiz.com/dsa/graph-dfs}
-
-I exploited this algorithm to calculate the distances from a source from each node in the spanning tree.
-
-
-
-\subsubsection{Bubbles Calling}
-The bubbles are identifiable by the fact that their start and end nodes have unique distances (\ref{fig:bubblepop.png}C). The inner nodes of each bubble are the variants of interest. 
-
+%aggiungere due colori uno per pangenomica uno per evolutonary, la figura serve per ora e per dopo
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.10\textwidth]{fig/GraphchrXnew.pdf}
+\includegraphics[width=0.80\textwidth]{fig/phylogenies.jpg}
 \decoRule
-\caption{\textbf{Fig A: Bubble}. Path x represents the sequence used as a reference to describe variants that are present in a sequence analysed.} %aggiungere path
-\label{fig:bubble.png}
+\caption{\textbf{Fig: phylogenetic tree}. 
+\url{modified from https://arthropoda.wordpress.com/2010/01/19/introduction-to-phylogenetics/}}
+\label{fig:phylogenies.jpg}
 \end{figure}
+
+\subsubsection{Step 2: Breadth first Search}
+Breadth First Search (BFS) \cite{beamer2012direction} is another recursive algorithm for traversing or searching tree or graph data structures. I used BFS on the trees obtained applying DFS (Figure \ref{fig:bubblepop.png}B).
+
+When used on trees, at each iteration BFS starts at the tree root and explores all of the neighbor nodes at one step, then expands to the nodes at the next steps until a goal state is reached \cite{korf1985depth, wiki:BFS}. The information encountered during the exploration is recored. 
+%come per BFS quest aparte no nmi e' chiara, no capisco cosa vuoi dire, da migliorare 
+With this start by putting any one of the three's vertices at the back of a queue.Take the front item of the queue and add it to the visited list. Create a list of that vertex's adjacent nodes. Add the ones which aren't in the visited list to the back of the queue. \url{https://www.programiz.com/dsa/graph-dfs}
+
+In \bbp, I used BFS to the trees obtained by DFS (Figure \ref{fig:bubblepop.png}B).
+%distance of a.... leave?
+In particular with BFS I calculated the distance of a node from the root node of the tree and stored this information in a dictionary, i.e. a table of correspondence (Figure \ref{fig:bubblepop.png}). 
+
+%%%%% IMPORTANTE: tutt ala perte di come ordini le bubbles e scegli il riferimento?? in pratica la ricostruzione della sequenza? 
+
+
+
 
 
 
@@ -157,22 +160,22 @@ The bubbles are identifiable by the fact that their start and end nodes have uni
 
 
 \subsection{gfa2vcf}
-
-The second function of \vgp is the \textit{gfa2vcf} , which takes as input a GFA format, goes through \textit{bubblepop}, and output is VCF format, i.e. is a text file format that collects genomic variants.
-
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=1.10\textwidth]{fig/gfatovcfnew.pdf}
-\decoRule
-\caption{\textbf{Graph} GfatoVcf}
-\label{fig:vgpop.pdf}
-\end{figure}
-
+%tolto the second, non c'e un ordine 
+The \textit{gfa2vcf} function of \vgp takes as input a graph in the GFA format and output a corresponding linear representation in the VCF format. To do this \textit{gfa2vcf} uses first \bbp, and then \bbc a function that make explicit the content of the bubbles and its position along a chosen reference sequence.    
+I used the information contained in the dictionary produced using \bbp to transform the information of the graph in a linear format. 
 
 
 \setcounter{secnumdepth}{3}
+%forse questo paragrafo serve qui? 
+\subsubsection{\bbc}
+Once the pangenome has been decomposed with \bbp in a set of trees whose information are stored in dictionary, \bbp make explicit the content of the bubbles and its position along a chosen reference sequence.    
+
+Within the dictionary, the beginning and the end nodes of a bubbles are identified by the fact that their distance from the root is uniqe, i.e. they are the only nodes with a specific distance from the tree. (Figure \ref{fig:bubblepop.png}C). All other nodes are  inner nodes of bubbles and correspond to variable regions of the sequence, furthermore nodes with the same distance from the root are in the same bubble. 
+
+
+
+
+
 \subsubsection{Extracting Variant}
 %"""QUESTO È VARIANT CALLING, QUINDI NON VA BENE"""Variant calling is the process of identifying genetic variants. First, sequence reads from one individual are aligned against the reference genome, then variable sites are identified as the ones where the sequence differs from the reference genome.
 
@@ -190,6 +193,26 @@ For SNV if the sequence are different in the current path respect to the REF.
 \end{itemize}
 
 I obtained VCF.
+
+
+%va completata con una parte che fa vedere il GFA e se vuoi il VCF risulatante da questa bolla
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.10\textwidth]{fig/GraphchrXnew.pdf}
+\decoRule
+\caption{\textbf{Fig A: Bubble}. Path x represents the sequence used as a reference to describe variants that are present in a sequence analysed.} %aggiungere path
+\label{fig:bubble.png}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.10\textwidth]{fig/gfatovcfnew.pdf}
+\decoRule
+\caption{\textbf{Graph} GfatoVcf}
+\label{fig:vgpop.pdf}
+\end{figure}
+
+
 
 {\small
 \begin{table}
@@ -212,25 +235,11 @@ I obtained VCF.
 \end{table}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Subsubsection 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{VCF and Validation}
+\subsubsection{Validation of the VCF obtained with \textit{gfa2vcf}}
 
 For validation VCF I use (\url{https://nicedoc.io/vgteam/vg}) Variation graphs provide a succinct encoding of the sequences of many genomes. 
 A variation graph (in particular as implemented in vg) is composed of:
@@ -430,16 +439,6 @@ I convert mstogfa but I need the information about the links between the bubbles
 
 \subsubsection{Seq-Gen}
 I needed the whole sequence rebuilt and the links between the bubbles """SPIEGARE PERCHE' E/O PER FARCI COSA.
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.80\textwidth]{fig/phylogenies.jpg}
-\decoRule
-\caption{\textbf{Fig: phylogenetic tree}. 
-\url{https://arthropoda.wordpress.com/2010/01/19/introduction-to-phylogenetics/}}
-\label{fig:phylogenies.jpg}
-\end{figure}
-
 
 Seq-Gen \cite{rambaut1997seq} is a program that will simulate the evolution of nucleotide sequences along a phylogeny, using common models of the substitution process. A range of models of molecular evolution are implemented, including the general reversible model. 
 
