@@ -1,6 +1,6 @@
 % Chapter discussion
 
-\chapter{Introduction-5/10pagine} % Main chapter title
+\chapter{Introduction} %-5/10pagine} % Main chapter title
 
 \label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter4} 
 
@@ -14,38 +14,53 @@
 
 %Grandezza genomi, genomi complessi, definizione pangenoma.
 
-\section{Sequencing}
-%mezza pagina
+\section{DNA sequencing}
+%TODO:
+%1.Figura nanopore 
+%2.referenze 
+%3. aggiungere \url{https://ib.bioninja.com.au/standard-level/topic-3-genetics/32-chromosomes/genome-size.html}
+%aggiungere questo concetto, complessità degli organismi in giga, trovare articolo.
 
-The process of sequencing determines the exact order of the monomers in a biomolecule, the nucleotides in the case of DNA sequencing. Sequence analyses has many applications, e.g. identify mutations or establish phylogenetic relationships among species.
+
+%PER ENZA \url{https://aulascienze.scuola.zanichelli.it/come-te-lo-spiego/2018/04/18/dal-metodo-sanger-a-oggi-40-anni-di-sequenziamento-del-dna/} mi sono ispirata a questi
+
+
+The process of sequencing determines the exact order of the monomers in a biomolecule, the nucleotides in the case of DNA sequencing. Sequence analyses has many applications, e.g. identify mutations or establish phylogenetic relationships among species. Sanger's method marked the beginning of genomics research and has been successfully until a decade ago when \textit{next generation sequencing (NGS)} was introduced to overcome the main limit of the Sanger sequencing, i.e. the sequencing volume.\\
+
+The main feature of NGS sequencing is the high-throughput. Unlike the traditional Sanger method, the NGS allows to analyze many sequences in parallel, reducing analysis times and costs. This reduction has improved over time: the sequencing of the first human genome, based on the Sanger method, required an investment of almost 100M dollars in about ten years, while today the sequence of a human genome can be obtained for less than 1k dollars in one day. Nevertheless, NGS has limitations too. The main limitation is the initial amplification of DNA sequences, which can introduce random errors in the sequence and leads to the loss of "accessory" information, such as the constellation of epigenetic modifications that are important for understanding the function of a fragment of genome. A second important limitations the size of the sequenced regions that covers at its best 700kb making impossible to map large structural variants.\\
+
+To overcome these limitations, research is now pointing towards \textit{third generation} methods that are oriented toward sequencing very long regions (ideally whole chromosomes) without  prior amplification. Among these methods, nanopore sequencing derives from an observation from the 1980s that when a single-stranded DNA passes through a very narrow channel (nanopore) generates a flow of ions with a characteristic pattern, which depends uniquely on its sequence. This technology allows sequencing millions of nucleotides without prior amplification of DNA fragments. \\
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.80\textwidth]{fig/nanopore.png}
+\decoRule
+\caption{Schematic representation of a DNA molecule translocating a protein nanopore. The double-stranded DNA (dsDNA) is split by a helicase enzyme, allowing only a single strand (ssDNA) to pass while slowing it enough to achieve sufficient resolution for sequencing}" \textit{Adapted from} \cite{sutton2019radiation}"} 
+\label{fig:nanopore}
+\end{figure}
 
 
 
-Sanger's method marked the beginning of genomics research and has been successfully until a decade ago when next generation sequencing (NGS) was introduced to overcome the main limit of the Sanger sequencing, i.e. the sequencing volume. \\
-NGS is an example  high-throughput sequencing. Unlike the traditional Sanger method, the NGS allows today to analyze many sequences in parallel, reducing analysis times and costs: the sequencing of the first human genome, based on the Sanger method, required an investment of almost 100 million dollars, while today the sequence of a human genome can be obtained for as little as $1,500$ dollars.
-But NGS has some limitations: it requires the initial amplification of DNA sequences (which could introduce random errors in the sequence) and leads to the loss of "accessory" information, such as the constellation of epigenetic modifications that are important for understanding the function of a fragment of genome.\\
 
-To overcome these limitations, research is now pointing towards third generation methods, such as nanopore sequencing. This technology derives from an observation that emerged as early as the 1980s: when a single-stranded DNA passes through a very narrow channel (nanopore) it generates a flow of ions with a characteristic pattern, which depends uniquely on its sequence. This technology would allow sequencing millions of nucleotides without resorting to the amplification of DNA fragments\\
 
-AMPLIARE E METTERE REFERENZE 
 
-\url{https://ib.bioninja.com.au/standard-level/topic-3-genetics/32-chromosomes/genome-size.html}
-aggiungere questo concetto, complessità degli organismi in giga, trovare articolo.
 
 \section{Genome \textit{versus} pangenome}
+%TODO: REFERENCE BIAS chiedere ad Erik
+%Genomics studies are based on two models: standard and alternative models. 
+
+Standard approaches in sequence analysis relate sequences to a single linear reference genome. Sequence fragments produced by NGS are mapped and assembled against a reference genome, and genetic variants are identified through comparison with it. While being an efficient way of processing sequence information, this approach has a fundamental problem, i.e. substantial difference from the reference sequence are hard to observe and describe. This phenomenon is defined as \textit{reference bias}, i.e.  DNA fragments carrying the reference allele will be more likely to map successfully, or receive higher quality scores compared to alternate alleles.\\  \cite{eizenga2020pangenome} \\
 
 
-Genomics studies are based on two models: standard and alternative models. 
+Pangenomic methods allow to overcome limitations of the use of the reference genomes, relating all genomes directly to each other. In pangenomic approches, sequence and variation are combined. This practice is still new, and research into ways to design, implement, and apply this model is ongoing. \\ \cite{eizenga2020pangenome} 
 
-Standard approaches analysis relate sequences to a single linear reference genome. This is efficient but has a fundamental problems, i.e. differences from this reference are hard to observe and describe. Variation and sequence are separated. 
-
-Alternative model i.e Pangenomic methods allow us to relate all genomes directly to each other. Sequence and variation are combined. This practice is still new, and research into ways to design, implement, and apply this model is ongoing. \\
-
-In reference-based genomic analyses (\ref{fig:genomevspangenome.png} a), all genomes (A–D) are compared with each other via their relationship to the reference genome (R).
-In a pangenomic analyses(\textbf{ii)},  all genomes are compared to each other, from which a particular reference is chosen arbitrarily. 
-When extending the analysis with a new genome, (\textbf{iii}) one adds it to the genomic model by comparing it with the reference genome.
-Instead in a pangenomic analyses,(\textbf{iv}), adding a new genome compares it directly with all other genomes in the model.\\
+In reference-based genomic analyses (\ref{fig:genomevspangenome.png} \textbf{a i}), all genomes (A–D) are compared with each other via their relationship to the reference genome (R).
+In a pangenomic analyses (Figure \ref{fig:genomevspangenome.png} \textbf{a ii)},  all genomes are compared to each other, from which a particular reference is chosen arbitrarily. 
+When extending the analysis with a new genome, (Figure \ref{fig:genomevspangenome.png} \textbf{a iii}) one adds it to the genomic model by comparing it with the reference genome.
+In a pangenomic analyses instead (Figure \ref{fig:genomevspangenome.png} \textbf{a iv}), when a new genome is added, it is compared directly with all other genomes in the model.\\
  
+ 
+% DA    qui in poi controllare con erik che si fa prima  
 Regions of some genomes (\ref{fig:genomevspangenome.png} b) are unalignable against the reference and cannot be represented in a list of variants. A graphical model of the genomes allows a direct all-to-all comparison (\textbf{ii}), capturing all of their sequence relationships.
 
 A collection of sequences representing a pangenome (\ref{fig:genomevspangenome.png} c). Multiple sequence alignment of the sequences captures their mutual relationships (\textbf{ii}).
@@ -59,26 +74,60 @@ the graph to indicate the presence of an inversion.
 \centering
 \includegraphics[width=1.00\textwidth]{fig/pangenome_genome.png}
 \decoRule
-\caption{Genomics versus pangenome (\textbf{A}), Linear representation with variants and Graphical representation compressed (\textbf{B})  Unaligned sequences and multiple sequence alignment (\textbf{C}), three types of graphs(\textbf{D}) CITARE FONTE }
+\caption{Genomics versus pangenome (\textbf{A}), Linear representation with variants and Graphical representation compressed (\textbf{B})  Unaligned sequences and multiple sequence alignment (\textbf{C}), three types of graphs(\textbf{D}) \cite{eizenga2020pangenome}}
 \label{fig:genomevspangenome.png}
 \end{figure}
 
-\section{Bubbles}
 
-Variants are coding in the graph as bubbles. 
+\section{Genetic variation in graphs}
+%TODO: comment Type of variants by size and ability to detect them
+The comparison of the sequence of multiple  genomes allow the identification of regions that present differences, i.e. genomic variants \ref{fig:typeOfVariants}.  \\ 
+
+
+
+
+In graphs genetic variants appear as circles or \textit{bubbles}. In the handlegraph there are five important elements described in Figure \ref{fig:gfa.png}:
+\begin{itemize}
+\item\textbf{Nodes} represented by yellow rectangles. Each node is associated with a numeric ID and a sequence. 
+
+\item\textbf{Strand Forward and reverse}. DNA strands have forward (+) and reverse (-) orientation. Each node contains a forward and reverse handle (red solid and dashed rectangles, respectively). Handles show the node identifier, the direction (+ or -), and the sequence of the handle.
+
+\item\textbf{Edges} are connections between nodes, repesented by arrows in the figure.
+
+\item\textbf{Paths} are obtained by 'walking' through the graph and represent the actual sequences. Not necessarily all possible paths should be observed in a set of real data.
+
+\item\textbf{Steps} describe paths visits to nodes strands.
+\end{itemize}
+
+In (Figure \ref{fig:gfa.png}) the first two paths differ by a single nucleotide polymorphism, with one passing through 2+:T, and the other through 3+:G. The third path is the reverse complement of the first. The fourth is the same as the first, but contains an inversion, passing through 5-: AATC rather than 5+: GATT.
+
+
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.50\textwidth]{fig/sup_bub.png}
+\includegraphics[width=1.00\textwidth]{fig/GFA.png}
 \decoRule
-\caption{Superbubble(\textbf{A}), Bubble (\textbf{B})}
+\caption{Entities in the bidirected sequence graph (\textbf{A}) \cite{eizenga2020succinct}}
+\label{fig:gfa.png}
+\end{figure}
+
+When only two variants (of one or more bases) are present, the bubble looks like a circle, while less simple patterns are referred as \textit{superbubbles} (Figure \ref{fig:sup_bub.png})
+%Variants are coding in the graph as bubbles. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.50\textwidth]{fig/bub_sup.png}
+\decoRule
+\caption{Bubble(\textbf{A}), Superbubble (\textbf{B})  }
 \label{fig:sup_bub.png}
 \end{figure}
 
+%IN GENERE SI METE PRIMA LA MENO COMPLESSA E POI LA PIU' COMPLESSA; SE HAI PRESO DA UN PAPER CITA IL PAPER. 
+%Ho modificato e non ho preso da nessun paper ma fatta io
 
 The superbubble is a more complex subgraph type in which a set of (not necessarily disjoint) paths start and end at common source and sink nodes.\cite{paten2018superbubbles}.
 Refering the definition from \cite{onodera2013detecting}, any pair of distinct vertices equation in a digraph (Fig: \ref{fig:sup_bub.png}A):
-
+%OK x e y e X se le metti anche sulla figura altrimenti e' diffcile seguire 
 \begin{enumerate}
 \item reachability: y is reachable from x.
 
@@ -91,7 +140,8 @@ Refering the definition from \cite{onodera2013detecting}, any pair of distinct v
 
 \end{enumerate}
 
-I'm concentred for \textit{bubblepop} to a case specific of a superbubble i.e  bubbles (Fig: \ref{fig:sup_bub.png})
+%I'm concentred for \textit{bubblepop} to a case specific of a superbubble i.e  bubbles (Fig: \ref{fig:sup_bub.png})
+In my project I focused on a specific case of a superbubble i.e. a bubble (Fig: \ref{fig:sup_bub.png}) to implement the core function of the library that is named \textit{bubblepop}. 
 
 A bubble consists of multiple directed unipaths from a vertex\textbf{ v} to a vertex \textbf{u} and is commonly caused by a small number of errors in the centre of reads.\cite{brankovic2016linear}. The bubble may be generalized to the idea of a superbubble, which is a directed, acyclic component of a graph with a single head and tail node.\cite{onodera2013detecting}.
 
@@ -101,7 +151,9 @@ through them.
 
 \section{Coding of genetic information}
 
-The genomic information is coded with linear model i.e Variant Call Format(VCF) and with Graphical representation of a pangenome(GFA).
+When the genomic information is coded with linear model it is stored in files in Variant Call Format(VCF), whereas graphical representation of a pangenome are stored in Graphical Fragment Assembly (GFA). 
+
+
 
 \subsection{Variant Call Format}
 Variant Call Format (VCF) is a text file format and is a generic format for storing DNA polymorphism data such as SNPs, insertions, deletions and structural variants, together with rich annotations. (\cite{10.1093/bioinformatics/btr330}). 
@@ -134,46 +186,50 @@ These corresponding to data columns representing the chromosome (CHROM), a 1-bas
 
 \subsection{Graphical Fragment Assembly}
 
+Pangenome data are represented by Graphical Fragment Assembly (GFA).\url{https://github.com/GFA-spec/GFA-spec}
+
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.00\textwidth]{fig/GFA.png}
+\includegraphics[width=0.50\textwidth]{fig/GFAexample.png}
 \decoRule
-\caption{Entities in the bidirected sequence graph (\textbf{A}) \cite{eizenga2020succinct}}
+\caption{Graph representation)} 
 \label{fig:gfa.png}
 \end{figure}
 
-Pangenome data are represented by Graphical Fragment Assembly(GFA).
+%GFA fatto da me, non copiato, usato per disegnare la bubble della figura precedente 
 
-%per ENZA, spiegare handlegraph, nomi diversi ecc?
 
-In the GFA, there are five elements important:
+GFA format is a representation of variation in genomes, splice graphs in genes.
+
+
+
+
+
 \begin{itemize}
 
-\item\textbf{Nodes}
+\item\textbf{Header section} start with H.
+\item\textbf{Segment line} start with S.
+Segment a continuous sequence or subsequence.
+\item\textbf{Link lines} start with L.
+Link an overlap between two segments. Each link is from the end of one segment to the beginning of another segment. Containment an overlap between two segments where one is contained in the other.
+\item\textbf{Path lines} start with P. 
+Path an ordered list of oriented segments, where each consecutive pair of oriented segments are supported by a link record.
 
-Nodes, (Fig: \ref{fig:gfa.png}) are represented by yellow rectangles. Each node is associated with a numeric ID and a sequence.  
-
-\item\textbf{Strand Forward and reverse}
-
-DNA strand has forward (+) and reverse (-) orientation. Handles show the node identifier, the direction (+ or -), and the sequence of the handle.  In (Fig: \ref{fig:gfa.png}) node contain a forward and reverse handle (red solid and dashed rectangles, respectively)
-
-\item\textbf{Edges}				
-
-Edges are shown as connections between nodes. In (Fig: \ref{fig:gfa.png}) are represented by the arrows between nodes. 
-
-\item\textbf{Steps}
-
-Steps describe paths visits to nodes strands.
-
-\item\textbf{Paths} 
-
-Paths indicate how the sequences walk in the gfa, all possible paths.
+%dire che ci sono linee opzionali
 
 
-(Fig: \ref{fig:gfa.png}) the first two paths differ by a SNP, with one passing through 2+:T, and the other through 3+:G. The third path is the reverse complement of the first. The fourth is the same as the first, but contains an inversion, passing through 5-: AATC rather than 5+: GATT.
+
+
+CIAO FLAVIAAAAAAAA 
+Ti piace come ho scritto l'introduzione  ciao Enza, si si sto aggiustando le cose che mi hai chiesto per non pensare all'esame :P
+
+
+
+
+
+
+
 \end{itemize}
-
-
 
 \section{HLA}
 
@@ -185,7 +241,7 @@ Paths indicate how the sequences walk in the gfa, all possible paths.
 \label{fig:HLA.png}
 \end{figure}
 
-%mettere anche grafo corrispondente?
+
 
 Genetic studies describes that an important roles in the developing of diseases is played by the major histocompatibility complex (MHC), or human leukocyte antigen (HLA). It contains several gene clusters that encode surface heterodimeric proteins, which are anchored to the plasma membrane and are responsible for antigen presentation to T cells, a stage that is followed by the development of an adaptive immune response. MHC proteins are subdivided into class I, class II, and class III (the complement system) \cite{campbell1993map}. \\
 

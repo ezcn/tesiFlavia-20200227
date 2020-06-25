@@ -1,9 +1,20 @@
 % Chapter discussion
 
-\chapter{Aim of the thesis-1,2 pagine} % Main chapter title
+\chapter{Aim of the thesis} %-1,2 pagine} % Main chapter title
 
 \label{Chapter4} % For referencing the chapter elsewhere, use \ref{Chapter4} 
 
 %----------------------------------------------------------------------------------------
 
-Illustra in modo chiaro e coinciso le finalità del lavoro sperimentale svolto dal candidato. 
+%Illustra in modo chiaro e coinciso le finalità del lavoro sperimentale svolto dal candidato. 
+
+
+Standard studies in sequence analysis typically assume a single linear reference genome (VCF). 
+These models have some limits, as structural and complex variation can render these simplified models inapplicable. With this model another limit is that see the information that there are presents in the reference sequence. To address this limitation, the aim of my thesis is work to implement a software library for the statistical population analysis using pangenomic data models.\\ 
+
+These are Typically represented in the Graphical Fragment Assembly (GFA) format, these models can represent whole genome alignments in a compact graphical structure. Because they embed the linear genomes from which they are constructed, I can choose a particular reference genome and project the variants (which appear as bubbles in the graph) back into any reference frame. I have focused for the first step on algorithms for bubble detection that allow us to generate Variant Call Format (VCF) files from graphs.\\
+
+I use this projection to drive standard population genetic analyses, and as a mechanism to communicate results that we obtain from pangenome graph based population genetic analyses which I am designing.
+In the second step, I use functions of library for analyses directly on pangenome data.
+
+

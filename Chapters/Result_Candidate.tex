@@ -95,9 +95,9 @@ gfa2fst & Calculation of F\textsubscript{ST} & GFA & fstfile\\
 
 \subsection{Bubblepop}
 
-The core of \vgp is the \textit{bubblepop} function, which takes as input a pangenome, detects sequence regions where more that one type of sequence is present (i.e. variable sites), and outputs the sequences of the variants. Because of their appearance in the pangenome graph, I will refer to these regions as bubbles (Figure bubble). \\
+The core of \vgp is the \bbp function, which takes as input a pangenome, detects sequence regions where more that one type of sequence is present (i.e. variable sites), and outputs the sequences of the variants. Because of their appearance in the pangenome graph, these regions are referred to as bubbles (Figure \ref{fig:gfa.png}). \\
 
-\textit{bubblepop} takes as input a GFA file and gives as output a dictionary. It explores the graph using the two recursive algorithms described in the two following paragraphs.
+\bbp takes as input a GFA file and gives as output a dictionary. It explores the graph using the two recursive algorithms described in the two following paragraphs.
 
 \begin{figure}[H]
 \centering
@@ -113,7 +113,7 @@ The core of \vgp is the \textit{bubblepop} function, which takes as input a pang
 \setcounter{secnumdepth}{3}
 \subsubsection{Depth first Search}
 
-I use two recursive algorith \cite{geeksforgeeks.org}.
+I use two recursive algorith \cite{geeksforgeeks.org}.%questo e' un sito generico
 
 
 Depth First Search (DFS) \cite{korf1985depth} is a recursive algorithm for searching graph data structures. (Figure \ref{fig:bubblepop.png}A)) . 

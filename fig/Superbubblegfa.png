@@ -1,0 +1,11 @@
+H	VN:Z:1.0
+S	1	CACTA
+S	2	ATTA
+S	3	AC
+S	4	AAA
+S	5	ACA
+L	1	+	2	+
+L	2	+	3	+
+L	3	+	4	+
+L	5	+	4	+
+L	1	+	5	+
