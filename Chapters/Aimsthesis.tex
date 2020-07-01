@@ -8,18 +8,14 @@
 
 %Illustra in modo chiaro e coinciso le finalità del lavoro sperimentale svolto dal candidato. 
 
-The way in which the study of genomic sequences is studied is facing a major change. Standard studies in sequence analysis typically assume a single linear reference genome with severe limitations in the identification of structural and complex variation. Pangenomic models, i.e. ERIK... allow to overcome these limitations  ... \\
+We are updating our methods to study genomic sequences to meet new challenges and reach for new possibilities offered by contemporary sequencing technology. The development of high-quality long-read sequencing methods allow us to routinely assemble whole genomes \emph{de novo}. This situation allows us to consider whole genomes in our analyses, allowing us to expose the full range of genomic variation to downstream studies. However, doing so requires updates to our methods, to allow us to consider the mutual relationships between a collection of sequences in a complete way.
 
+Pangenomes are large, and unwieldy to work with as raw collections of sequences. One possible approach to processing them considers the collection of genomes and their mutual alignment in a compact, graphical model. As a lossless representation of the pangenome and its embedded sequence variation, these \emph{variation graphs} should in principle support any kind of population genetic analysis that would be completed on simpler representations of the genomes and their variation. But, because this pangenomic approach is quite recent, the software for population genetic analyses currently available are still mostly based on genomic data in the linear format.
 
-Because the pangenomic approach is quite recent, the software for population genetic analyses currently available is mostly based on genomic data in the linear format.  
-%With this model another limit is that see the information that there are presents in the reference sequence. To address this limitation, the aim of my thesis is work to implement a software library for the statistical population analysis using pangenomic data models.
+In this thesis, I respond to this need by implementing a set of tools for population genetics on genome graphs. At a high level, my work has two parts. I first uncover genomic variation embedded in pangenomic variation graphs by developing and implementing straightforward algorithms for \emph{bubble} detection on variation graphs. I then demonstrate the calculation of basic population genetic parameters over these variations, considering the set of genomes embedded in the graph.
 
-%\noindent
-%These are Typically represented in the Graphical Fragment Assembly (GFA) format, these models can represent whole genome alignments in a compact graphical structure. Because they embed the linear genomes from which they are constructed, I can choose a particular reference genome and project the variants (which appear as bubbles in the graph) back into any reference frame. I have focused for the first step on algorithms for bubble detection that allow us to generate Variant Call Format (VCF) files from graphs.
-%I use this projection to drive standard population genetic analyses, and as a mechanism to communicate results that we obtain from pangenome graph based population genetic analyses which I am designing.
-%In the second step, I use functions of library for analyses directly on pangenome data.
+Specifically, this work required the completion of a series of tasks:
 
-The aim of the project I developed during my master thesis was to implement a library for population genetic analysis from pangenomic data. The objectives were: 
 
 \begin{itemize}
     \item To write code for parsing variable regions of the genomic data in graphical fragment assembly format 
@@ -27,6 +23,19 @@ The aim of the project I developed during my master thesis was to implement a li
     \item To test the functions of the library on simulated data
     \item To test the functions of the library on a case study
 \end{itemize}
+
+
+%The way in which the study of genomic sequences is studied is facing a major change. Standard studies in sequence analysis typically assume a single linear reference genome with severe limitations in the identification of structural and complex variation. Pangenomic models, i.e. ERIK... allow to overcome these limitations  ... \\
+
+
+%With this model another limit is that see the information that there are presents in the reference sequence. To address this limitation, the aim of my thesis is work to implement a software library for the statistical population analysis using pangenomic data models.
+
+%\noindent
+%These are Typically represented in the Graphical Fragment Assembly (GFA) format, these models can represent whole genome alignments in a compact graphical structure. Because they embed the linear genomes from which they are constructed, I can choose a particular reference genome and project the variants (which appear as bubbles in the graph) back into any reference frame. I have focused for the first step on algorithms for bubble detection that allow us to generate Variant Call Format (VCF) files from graphs.
+%I use this projection to drive standard population genetic analyses, and as a mechanism to communicate results that we obtain from pangenome graph based population genetic analyses which I am designing.
+%In the second step, I use functions of library for analyses directly on pangenome data.
+
+%The aim of the project I developed during my master thesis was to implement a library for population genetic analysis from pangenomic data. The objectives were: 
 
 
 

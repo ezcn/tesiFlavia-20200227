@@ -297,7 +297,7 @@ The code I developed for the \textit{seqgen2gfa+vcf} function of \vgp takes as i
 
 %un po' contorta correggere 
 \section{Application of \vgp to simulated data}
-To test if the calculation made by \vgp are accurate, we applied \vgp functions to data for which we can predict ranges of expectations for the parameters calculated by \vgp. In particular we used sequence data produced by simulation under a known demographic scenario. 
+To test if the calculation made by \vgp are accurate, we applied \vgp functions to data for which we can predict ranges of expectations for the parameters calculated by \vgp. In particular we used sequence data produced by simulation under a known demographic scenario of two populations separating from a common ancestral population to measure the degree of separation calculated as $F\textsubscript{st}$. 
 
 %I exploited analiculayses of genetic population on simulated data to already know what to expect.
 
@@ -306,18 +306,17 @@ To test if the calculation made by \vgp are accurate, we applied \vgp functions 
 %  Subsection 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Simulation Scenario and Tools}
+\subsection{Simulation Scenario}
 
-As simulation scenario I considered a model adapted from \cite{hudson2004ms} with two diploid populations separating without subsequent migration (Figure \ref{fig:population.pdf}). The first population is bigger in size compared to the second, and through time develops first maintaining constant size and exponentially expanding in the last 5k generations. The second develops through time maintaining constant size. I considered three possible scenario for separation time: 5k (T1), 10k (T2), and 15k (T3) generations ago. The expectation is that the longer the separation time, the higher will be the $F\textsubscript{st})$ , with scenario T3 having the higher $F\textsubscript{st})$ compared to T2 and T1. \\
+As simulation scenario I considered a model adapted from \cite{hudson2004ms} with two diploid populations separating without subsequent migration (Figure \ref{fig:population.pdf}). The first population is bigger in size compared to the second, and through time develops maintaining constant size until 5k generations ago when it starts to exponentially expand. The second population develops through time maintaining constant size. I considered three possible scenario for separation time: 5k (T1), 10k (T2), and 15k (T3) generations ago. The expectation is that the longer the separation time, the higher will be the $F\textsubscript{st}$ , with scenario T3 having the higher $F\textsubscript{st}$ compared to T2 and T1. \\
 
-Simulations can provide sequence data through all the time spanning the demographic model used, however to simulate a living population we are interested only in the sequences at time zero, i.e. at the end of the simulations.\\
+Simulations can provide sequence data through all the time spanning the demographic model used, however to simulate a living population we are interested only in the sequences at time zero, i.e. at the most recent time.\\
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=1.10\textwidth]{fig/populationthreetime.png}
 \decoRule
-\caption{\textbf{Fig:Population}. 
-T1 (0.031254 Ne), T2(0.0625 Ne),T3(0.09375 Ne)}
+e\caption{\textbf{Demographic models used as simulation scenario.} The y-axis is the time before present and time 0.00 correspond to the time when the sequence data is reported. The time is in units of 4Ne, where Ne represent the effective population size. Initially (time 0.12) there is only one ancestral population. After a number of generations the ancestral population splits in two populations evolving in isolation. I considered three possible times of separation (T1-3). The expectation is that the highest is the separation time the highest is the genetic distance between the two populations measured as $F\textsubscript{st}$.} 
 \label{fig:population.pdf}
 \end{figure}
 
@@ -325,20 +324,10 @@ T1 (0.031254 Ne), T2(0.0625 Ne),T3(0.09375 Ne)}
 %ref piu' recenti 
 \textbf{ms} \cite{hudson2004ms} is a software that generates sequence samples under a variety of neutral models, allowing one to investigate the statistical properties of such samples, to evaluate estimators or statistical tests, and generally to aid in the interpretation of polymorphic data sets. The program ms can be used to generate many independent replicate samples under a variety of assumptions about migration, recombination rate and population size.\\ 
 
-When simulated 100 replicates of eighty individuals in two populations (forty each), that divided 5k generations ago (T1) I used the following command line: 
+Using ms, for each scenario I simulated 100 replicates of a 10kb sequence for eighty individuals in two populations (forty each). When considering a population split time of 5k generations ago (T1) I used the following command line: 
 \begin{verbatim}
 ms 80 100 -T -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.03125 2 1   
 \end{verbatim}
-
-%I simulated two populations that divided 10.000 generations ago.
-%\begin{verbatim}
-%ms 80 100 -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.0625 2 1   
-%\end{verbatim}
-
-%I simulating two populations that divided 15k generations ago 
-%\begin{verbatim}
-%ms 80 100 -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.09375 2 1   
-%\end{verbatim}
 
 The explanation of the parameters used by ms is the following:
 
@@ -372,7 +361,7 @@ To simulate the T2 and the T3 parameters the difference in the command line is i
 
 \subsubsection{Conversion of simulated data in the GFA format}  
 
-To be processed by \vgp, the simulated data must be converted in the GFA format. We did this in two steps. First we transformed the data on variable sites obtained by ms into sequences using Seq-Gen \cite{rambaut1997seq}, than we transformed sequences into graphs with a utility function that I developed, named \textit{seqgen2gfa+vcf}. 
+To be processed by \vgp, the simulated data must be converted in the GFA format. We did this in two steps. First we transformed the data on variable sites obtained by ms into sequences using Seq-Gen \cite{rambaut1997seq}, than we transformed sequences into graphs with a utility function that I developed, named \textit{seqgen2gfa+vcf}. \\
 
 %I needed the whole sequence rebuilt and the links between the bubbles """SPIEGARE PERCHE', per usare odgi"g
 
@@ -380,10 +369,7 @@ To be processed by \vgp, the simulated data must be converted in the GFA format.
 %I convert mstogfa but I need the information about the links between the bubbles. 
 
 
-While ms provides information on variable sites it does not provide information on the invariable sequence between variable sites, that is necessary to build a graph. I obtained the information on invariable sites exploiting the tree connecting the simulated sequences that is also an output of ms. A tree is an entity that describes relationships between objects (Figure \ref{fig:phylogenies.jpg}). The tips of the tree are called leaves; leaves are connected by branches, whose length is proportional to the observed differences between the leaves; the coalescence of two branches generates a node or vertex. In our case the leaves represent the simulated sequences that we are actually interested in because they represent the individuals at current time. The nodes indicate the most common ancestor of sequences, the root of the tree is a special node located at the beginning of the tree. 
-
-%aggiungere due colori uno per pangenomica uno per evolutonary, la figura serve per ora e per dopo
-
+While ms provides information on variable sites it does not provide information on the invariable sequence between variable sites, that is necessary to build a graph. I obtained the information on invariable sites exploiting the tree connecting the simulated sequences that is also an output of ms. A tree is an entity that describes relationships between objects (Figure \ref{fig:phylogenies.jpg}). The tips of the tree are called leaves; leaves are connected by branches, whose length is proportional to the observed differences between the leaves; the coalescence of two branches generates a node or vertex. In our case the leaves represent the simulated sequences that we are actually interested in because they represent the individuals at current time. The nodes indicate the most common ancestor of sequences, the root of the tree is a special node located at the beginning of the tree. \\
 
 
 \begin{figure}[H]
@@ -396,74 +382,55 @@ While ms provides information on variable sites it does not provide information 
 
 Seq-Gen \cite{rambaut1997seq} is a program that simulates the evolution of nucleotide sequences along a phylogeny, using common models of the substitution process. A range of models of molecular evolution are implemented, including the general reversible model. 
 
-Using the tree obtained by ms, Seq-Gen reconstructed the entire sequences, including the invariable parts, for all replicates under the three simulated times. The command lines for Seq-Gen are: 
+Using the tree obtained by ms, Seq-Gen reconstructed the entire sequences, including the invariable parts, for all replicates under the three simulated scenario. The command lines for Seq-Gen are: 
 
 \begin{verbatim}
-seq-gen -mHKY -l 40 -s .2 -wa -z 783763255346462154 <treems40popT1> T1.seqgen
-
-seq-gen -mHKY -l 40 -s .2 -wa -z 783763255346462154 <treems40popT2> T2.seqgen
-
-seq-gen -mHKY -l 40 -s .2 -wa -z 783763255346462154 <treems40popT3> T3.seqgen
-
+seq-gen -mHKY -l 1000 -s .2 -wa -z 783763255346462154 <treems40popT1> T1.seqgen
 \end{verbatim}
-
+where T1.seqgen is the output of the simulations under the scenario T1.
 The explanation of the parameters is:
 
 \begin{itemize}
-
 \item\textbf{m <MODEL>:} This option sets the model of nucleotide or amino acid substitution.
 \item\textbf{l <SEQUENCELENGTH>:} This option allows the user to set the length in nucleotides or amino acids that each simulated sequence should be.
 \item\textbf{s <SCALE>:} This option allows the user to set a value with which to scale the branch lengths in order to make them equal the expected number of substitutions per site for each branch. Basically Seq-Gen multiplies each branch length by this value.
 \item\textbf{z <RANDOMNUMBERSEED>:} This option allows the user to specify a seed for the random number generator. Using the same seed (with the same input) will result in identical simulated datasets. This is useful because you can then delete the (often large) simulated sequence files to save disk space. To recreate a set of simulations, you must use exactly the same model options. The default is to obtain a seed from the system clock which will be displayed on the screen allowing it noted down.
 \item\textbf{wa:}
-Write Ancestral Sequences. This option allows the user to obtain the sequences for each of the internal nodes in the tree obtained with ms 
-\end{itemize}
+Write Ancestral Sequences. This option allows the user to obtain the sequences for each of the internal nodes in the tree obtained with ms \end{itemize}
 
-%descrizione seqgen2gfa+vcf
-
-\subsection{Calculation of  $F\textsubscript{st})$  from simulated data using \vgp}
+Once I obtained the variable sites from ms and the sequence from SeqGen I used the \vgpop function \textit{seqgen2gfa+vcf} that I wrote, to convert the sequences from SeqGen to GFA format.  
 
 
+
+%-------------------------------------------------------------
+\subsection{Calculation of  $F\textsubscript{st}$ from simulated data using \vgp}
+
+I calculated $F\textsubscript{st}$ from the pangenome of the simulated data using the \vgpop function \textit{gfa2vcf}. As a control the simulated sequences were also converted in a VCF file that was used to calculate $F\textsubscript{st}$ with an already existing software: in this way I can compare if the $F\textsubscript{st}$ obtained by the software I wrote are in the same range of those obtained in a different way (Figure \ref{fig:pipeline.pdf}). \\
+
+
+%cambiare figura 11 in minipresentazione= line1
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.00\textwidth]{fig/pipeline_new.png}
+\includegraphics[width=1.00\textwidth]{fig/pipeline.png}
 \decoRule
-\caption{\textbf{Fig:Pipeline}. 
-Validation.}
+\caption{\textbf{Pipeline for the application and validation of \vgp to simulated data.} I used the software ms to produce 100 replicates of simulated variable sites in a 10kb region for eighty individuals under each of the three scenario in Figure \ref{fig:population.pdf}. The variable sites were transformed in sequences that include also the invariable part using SeqGen and the sequences were used to reconstruct the pangenome of the simulated data that was then processed with the \textit{gfa2fst} function of the \vgp library. $F\textsubscript{st}$ calculation was validated using a software, vcftools, that uses a different $F\textsubscript{st}$ formula. }
 \label{fig:pipeline.pdf}
 \end{figure}
 
-Starting from ms, I obtained simulated sequences, I reconstruct an ancestral tree with Seq-Gen. 
-
-These sequences were encoded in a GFA file and VCF file with \textit{seqgen2gfa+vcf }.
-
-
-On GFA file I calculate the allele frequencies with \textit{gfa2allelefreq}, the genotype frequencies with \textit{gfa2genofreq}, and the Fst with \textit{gfa2fst}. 
-
-On VCF file I extract individuals from the populations that I considered with bcftools. %non so se mettere questa parte
-\begin{verbatim}
-
-bcftools view -S pop_1.txt seqgen.vcf.gz -o seqgen.bcf.vcf.gz #pop1
-bcftools view -S pop_2.txt seqgen.vcf.gz -o  seqgen.bcf.vcf  #pop2 
-\end{verbatim}
-
-Calculate Allele Frequencies for two populations with vcftools
-\begin{verbatim}
-
-vcftools --vcf seqgen.bcf.vcf --freq --out seqgen.bcf.pop1.vcf .frq
-
-vcftools --vcf ms_rep{1}.bcf.vcf --freq --out seqgen.bcf.pop2.vcf.frq 
-
-\end{verbatim}
-
-I calculate Fst with \textit{vcf2fst} (aggiungerlo nell'immagine?). %aggiungere altre info sullo script
-
-Fst is the same from GFA and VCF file.
-
-
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.00\textwidth]{fig/fst_time (1).png}
+\includegraphics[width=1.00\textwidth]{fig/Fstvcftoolsandvgpop.png}
+\decoRule
+\caption{\textbf{Fig:valure of Fst are equal}.}
+\label{fig:fsttime.png}
+\end{figure}
+
+
+$F\textsubscript{st}$ was calculated for each replicates of each scenario. Figure \ref{fig:fsttime.png} shows the distributions of $F\textsubscript{st}$ relative to the three scenario and table XXX reports the relative summary statistics. FRASE CHE COMMENTA I RISULTATI doppo che vediamo la figura definitiva    Fst is the same from GFA and VCF file.\\
+ 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.00\textwidth]{fig/tabvcftoolsvgpop.png}
 \decoRule
 \caption{\textbf{Fig:valure of Fst are equal}.}
 \label{fig:fsttime.png}
@@ -474,7 +441,18 @@ Fst is the same from GFA and VCF file.
 
 
 
+
 \section{Application of \vgp to real data: allele frequencies at variable loci of the HLA region}
+
+HLA is an highly polymorphic region of the genome and it is particularly difficult to assemble with linear methods. The HLA region represent a typical case in which the use of pangenomes can improve the mappability of the sequence reads and the discovery of genomic variants \cite{chin2019diploid}.
+%referenza tesi Erik HLA
+%calcolare sul vcf frequenze alleliche con vcftools
+%Pangenomic methods allow us to relate all genomes or sequences in our analysis directly to each other. One of the most polymorphic parts of the genome is the HLA region and for this thing I chose this region.
+
+PAngenome Class I E gene  bp long 9 sequences  ENSEMBL 
+
+I calculated allele frequency at variable sites in the HLA region from a pangenome obtained 
+
 
 I applicate two functions of \vgp to pangenomes of HLA. In particular I calculate \textit{gfa2vcf} and \textit{gfa2allelefreq}.
 
@@ -482,14 +460,27 @@ I applicate two functions of \vgp to pangenomes of HLA. In particular I calculat
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.50\textwidth]{fig/pangenome.pdf}
+\includegraphics[width=1.10\textwidth]{fig/pangenomeHLA.png}
 \decoRule
 \caption{\textit{pangenome}. Is represented a piece of pangenome of HLA, the first row represent Reference and the other rows represent another paths. (\textbf{A}). Zoom for the first column  (\textbf{B}), zoom the second column(\textbf{C})}
 \label{fig:pangenome.pdf}
 \end{figure}
 
+HLA-E is encoded by the major histocompatibility complex (MHC) locus and belongs to non-classical MHC class I (MHC Ib) genes. HLA-E protein shares high structural and functional homology with other MHC class I molecules. HLA-E is expressed on most nucleated cells of the human body. However, surface expression ofHLA-E protein was found in a restricted set of tissues. In particular, it has been found on leukocytes,endothelium, and cells of trophoblast.\cite{kanevskiy2019dimorphism} 
 
-Pangenomic methods allow us to relate all genomes or sequences in our analysis directly to each other. One of the most polymorphic parts of the genome is the HLA region and for this thing I chose this region.
+
+
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.20\textwidth]{fig/C-3107.sort.odgi.png}
+\decoRule
+\caption{\textit{pangenome}.Gene con inserzioni,SNP, regione molto complessa}
+\label{fig:pangenome.pdf}
+\end{figure}
+
 
 \subsection{gfa2vcf}
 
@@ -522,7 +513,7 @@ The same for the second column, left node there aren't in 5 paths, and for calcu
 
 
 %sequenze nel pangenoma sotto forma di lettere
-
+%sostituire A con pangenoma intero e provare con un gene famoso
 
 {\small
 \begin{table}
@@ -543,6 +534,10 @@ gi|568815592:30489405-30494204 & 3904 & G & A & 0.67\\
 \end{adjustbox}
 \end{table}
 }
+
+
+
+HLA semlice ma un po' più complesso
 
 
 

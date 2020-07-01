@@ -302,3 +302,22 @@ odgi sort -i E-3133.og  -o - | odgi viz -i - -o E-3133.sorted.png -x 15000
   
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%55
+% quello sotto VA NEI METODI 
+On GFA file I calculate the allele frequencies with \textit{gfa2allelefreq}, the genotype frequencies with \textit{gfa2genofreq}, and the Fst with \textit{gfa2fst}. 
+
+On VCF file I extract individuals from the populations that I considered with bcftools. %non so se mettere questa parte
+\begin{verbatim}
+
+bcftools view -S pop_1.txt seqgen.vcf.gz -o seqgen.bcf.vcf.gz #pop1
+bcftools view -S pop_2.txt seqgen.vcf.gz -o  seqgen.bcf.vcf  #pop2 
+\end{verbatim}
+
+Calculate Allele Frequencies for two populations with vcftools
+\begin{verbatim}
+
+vcftools --vcf seqgen.bcf.vcf --freq --out seqgen.bcf.pop1.vcf .frq
+
+vcftools --vcf ms_rep{1}.bcf.vcf --freq --out seqgen.bcf.pop2.vcf.frq 
+
+\end{verbatim}
