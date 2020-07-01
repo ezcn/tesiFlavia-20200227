@@ -14,24 +14,27 @@ chapterinoneline, % Uncomment to place the chapter title next to the number on o
 %consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
 ]{MastersDoctoralThesis} % The class file specifying the document structure
 
+\usepackage{textalpha}
+\usepackage{amsmath}
 
+\usepackage[backend=biber,style=numeric,sortcites,natbib=true,sorting=none]{biblatex}
 \usepackage[utf8]{inputenc} % Required for inputting international characters
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 \usepackage{todonotes}
 \usepackage{mathpazo} % Use the Palatino font by default
 \usepackage{adjustbox} % Resize table
-\usepackage[backend=bibtex,style=numeric-comp,sorting=none,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+%\usepackage[backend=bibtex,style=numeric-comp,sorting=none,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 \addbibresource{thesis.bib} % The filename of the bibliography
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{rotating}
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
-\usepackage{glossaries}
+%\usepackage{glossaries}
 \usepackage[T1]{fontenc}
 \usepackage{comment}
 \usepackage{hyperref}
-\makeglossaries
-\loadglsentries{glossary}
+%\makeglossaries
+%\loadglsentries{glossary}
 
 
 \newcommand{\vgp}{\textsc{vgpop }}
@@ -70,7 +73,9 @@ BIOTECNOLOGIE MEDICHE
 %{\scshape\large\normalfont\bfseries\textit \textit{vgpop}, a Python library for population genomics analyses from pangenomes
 % \par}  
 
-{\scshape\large\normalfont\bfseries\textit Population genomics analyses from pangenomes
+{\scshape\large\normalfont\bfseries\textit Population genomics analyses on{\scshape\large\normalfont\bfseries\textit 
+ 
+ pangenome graphs
  \par}  
 
 

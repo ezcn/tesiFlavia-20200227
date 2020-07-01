@@ -1,43 +1,5 @@
 %%% PRomemoria, 20 pagine
-APPUNTI:
--quando si allinea con il riferimento si vede 'solo' quello che c'è nel riferimento
 
-\vspace{2cm}
-Introduzione:
-- allineamento usando la sequenza di riferimento, limiti nell'usare la sequenza di riferimento, approccio pangenomica.
-
-Nella conversione di gfainvcf il core è l'identificazione delle bubble
-
-Genoma di sars-cov2, focalizzarsi su TIME CONSUMING   
-
-
-%Tabella  (scrivere meglio descrizioni )
-%bubblePop & Bubble detection
-%gfa2vcf &  rewrite file in gfa format in a vcf 
-%gfa2allelefreq & explanation 
-%gfa2genofreq & explanation 
-%gfa2fst & explanation 
-%devo spiegare nel dettaglio le funzioni in termine di codice o di cosa fanno? 
-%Aggiungere anche mstovcf,seqgentogfa?
-
-1. descrizione vgpop (6 pagine entro 5 giugno ) 
-1a. Bubble detection
-1b. variant calling 
-1c. validation 
-1d. allelic and genotipic frequencies, Fst 
-
-2. application to simulated data (6 pagine entro 6 giugno) 
-2a. simulation scenario and tools 
-2b. application of vgpop to simulated data 
-
-3. Study cases: (6 pagine) 
-
-
-- covid19
-allele frequencies from pangenome 
-De-novo assembly
-- yeast 
-allele frequencies
 
 % Chapter results
 
@@ -61,9 +23,9 @@ allele frequencies
 
 I developed a library named \vgp to conduct standard population genetics analyses using pangenomic data models. Typically represented in the Graphical Fragment Assembly (GFA) format, these models can represent whole genome alignments in a compact graphical structure. The library is written in Python programming language under MIT license; the code is publicly available on GitHub (\url{https://github.com/Flavia95/VGpop}) 
 
-At its present state \vgp contains five functions briefly introduced in tab \ref{tab:functionvgpop} and detailed in the following paragraphs.
+At its present state \vgp contains seven functions briefly introduced in tab \ref{tab:functionvgpop} and detailed in the following paragraphs.
 
-\vspace{1cm}
+%\vspace{1cm}
 
 {\small
 \begin{table}[H]
@@ -76,10 +38,12 @@ At its present state \vgp contains five functions briefly introduced in tab \ref
 \tabhead{vgpopfunction} & \tabhead{Description} & Input & Output \\
 \midrule
 bubblepop & Identification of polymorphic genomic regions (bubbles) &  GFA & dictionary  \\
+bubblecall & variant calling and positioning  &  dictionary & dictionary  \\
 gfa2vcf & Conversion of files in GFA format to VCF format & GFA & VCF \\
 gfa2allelefreq & Calculation of allele frequencies & GFA & allelefreqfile \\
 gfa2genofreq & Calculation of genotype frequencies & GFA & genotypefrequenciesfile \\
 gfa2fst & Calculation of F\textsubscript{ST} & GFA & fstfile\\
+seqgen2gfa+vcf & File conversion from Seq-Gen & Seq-Gen & GFA, VCF \\
 \bottomrule\\
 \end{tabular}
 \end{adjustbox}
@@ -93,13 +57,13 @@ gfa2fst & Calculation of F\textsubscript{ST} & GFA & fstfile\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Bubblepop}
+\subsection{\bbp}
 
-The main challenge of my project was to extract the information about variable sites (i.e. regions where more that one type of sequence is present) from the graphs. Any population genetic analysis is in fact based on the information contained in the variable segments of the sequence and their occurrence in the population under investigation. Because of their appearance in the pangenome graph, variable sites are referred to as bubbles (Figure \ref{fig:gfa.png}). \\
+The main challenge of my project was to extract the information about variable sites (i.e. regions where more that one type of sequence is present) from the graphs. Any population genetic analysis is indeed based on the information contained in the variable segments of the sequence and their occurrence in the population under investigation. Because of their appearance in the pangenome graph, variable sites are referred to as bubbles (Figure \ref{fig:gfa.png}). 
 
 The core of \vgp is the \bbp function, which takes as input a pangenome, detects bubbles, and outputs the sequences of the variants contained in the bubbles.
 
-\bbp takes as input a GFA file and gives as output a dictionary, i.e. a table of correspondences between region of the graph and sequence variants. It explores the graph using the two recursive algorithms described in the following paragraphs and works in two consecutive steps. 
+The code I developed for the \bbp function takes as input a GFA file and gives as output a dictionary, i.e. a table of correspondences between region of the graph and sequence variants. It explores the graph using the two recursive algorithms described in the following paragraphs and works in two consecutive steps. 
 
 %% non servono le lettere, zzom dalontano, graph piu' complesso senza dettaglio si fa vdere DFS sceglie un nodo  eesplora a casa un pezzoee  
 %tree con root piu' lontana, aggiungere un pezzo di root 
@@ -117,68 +81,82 @@ The core of \vgp is the \bbp function, which takes as input a pangenome, detects
 \subsubsection{Step 1: Depth first Search}
 
 %I use two recursive algorith \cite{geeksforgeeks.org}.%questo e' un sito generico
-The Depth First Search (DFS) \cite{korf1985depth,wiki:DFS} is a recursive algorithm for searching graph data structures. DFS select an arbitrary node as root node and explores as far as possible along each branch. The exploration process runs until some depth cutoff is reached, and then DFS backtracks to the next most recently expanded node. Therefore, only the path of nodes from the initial  node to the current  node  must be stored in order to execute the algorithm (Figure \ref{fig:bubblepop.png}A))
+The Depth First Search (DFS) \cite{korf1985depth,wiki:DFS} is a recursive algorithm for searching graph data structures. DFS select an arbitrary node as root node and explores as far as possible along each branch. The exploration process runs until some depth cutoff is reached, and then DFS backtracks to the next most recently expanded node. Therefore, only the path of nodes from the initial  node to the current  node  must be stored in order to execute the algorithm (Figure \ref{fig:bubblepop.png}A). At each iteration, DFS marks each node of a graph as visited and piles it up on a stack of visited nodes. \\
 
-%vertex==node? non capisco questo paragrafo
-DFS marks each vertex of a graph as visited. With this, start by one of the vertices of the graph in a stack. Take the item on top of the stack and add it to the list visited. Create a list of the adjacent nodes of that vertex. Add node that is not in the visited list.\\
-
-In \bbp I use the DFS algorithm to explore the graph starting from a random node of the pangenome. At each iteration, \bbp creates a spanning tree from the part of the pangenome that is explored (Figure \ref{fig:bubblepop.png}B), threfore transforming the pangenome in a set of trees.\\ %vediamo meglio questo: Starting from the pangenome graph, with the DFS algorithm a spanning tree of its vertices is obtained.\\
-
-A tree is an entity that describes relationships between objects (Figure \ref{fig:phylogenies.jpg}). The tips of the tree are called leaves; leaves are connected by branches, whose length is proportional to the observed differences between the leaves; the coalescence of two branches generates a node or vertex. In phylogeny and evolutionary genetics the nodes indicate the most common ancestor of sequences. In trees obtained from pangenomes, the branches are obtained by resolving the bubble in its edges components and the nodes represent chunks of sequences, the root of the tree is a special node located at the beginning of the tree. 
-
-%aggiungere due colori uno per pangenomica uno per evolutonary, la figura serve per ora e per dopo
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.80\textwidth]{fig/phylogenies.jpg}
-\decoRule
-\caption{\textbf{Fig: phylogenetic tree}. 
-\url{modified from https://arthropoda.wordpress.com/2010/01/19/introduction-to-phylogenetics/}}
-\label{fig:phylogenies.jpg}
-\end{figure}
+In \bbp I use the DFS algorithm to explore the graph starting from a random node of the pangenome. At each iteration, \bbp creates a spanning tree from the part of the pangenome that is explored (Figure \ref{fig:bubblepop.png}B), threfore transforming the pangenome in a trees. In trees obtained from pangenomes, the branches are obtained by resolving the bubble into its edges components and the nodes represent chunks of sequences.  
 
 \subsubsection{Step 2: Breadth first Search}
-Breadth First Search (BFS) \cite{beamer2012direction} is another recursive algorithm for traversing or searching tree or graph data structures. I used BFS on the trees obtained applying DFS (Figure \ref{fig:bubblepop.png}B).
+Breadth First Search (BFS) \cite{beamer2012direction,programiz.com}, is another recursive algorithm for traversing or searching tree or graph data structures. I used BFS on the tree obtained applying DFS (Figure \ref{fig:bubblepop.png}B). When used on trees, at each iteration BFS starts at the tree root and explores all of the neighbor nodes at one step, then expands to the nodes at the next steps until a goal state is reached \cite{korf1985depth, wiki:BFS}. The information encountered during the exploration is recorded and the nodes that are visited are marked.\\  
+ 
+In \bbp, I used BFS on the tree obtained by DFS (Figure \ref{fig:bubblepop.png}B). Starting from the tree root DFS explores the tree until it finds a bubble. When this happens it calculates the distance from the root of all the nodes in the bubbles and stores this information in a dictionary, i.e. a table of correspondence (Figure \ref{fig:bubblepop.png}). 
 
-When used on trees, at each iteration BFS starts at the tree root and explores all of the neighbor nodes at one step, then expands to the nodes at the next steps until a goal state is reached \cite{korf1985depth, wiki:BFS}. The information encountered during the exploration is recored. 
-%come per BFS quest aparte no nmi e' chiara, no capisco cosa vuoi dire, da migliorare 
-With this start by putting any one of the three's vertices at the back of a queue.Take the front item of the queue and add it to the visited list. Create a list of that vertex's adjacent nodes. Add the ones which aren't in the visited list to the back of the queue. \url{https://www.programiz.com/dsa/graph-dfs}
+%AGGIUNGERE COME SI CONSERVANO I PATHS: non so se metterlo, sono già presenti nel grafo ma nella mia implementazione ho creato dizionari per comodità ma si dovrebbe sfruttare che sono nel GFA.odgi. 
 
-In \bbp, I used BFS to the trees obtained by DFS (Figure \ref{fig:bubblepop.png}B).
-%distance of a.... leave?
-In particular with BFS I calculated the distance of a node from the root node of the tree and stored this information in a dictionary, i.e. a table of correspondence (Figure \ref{fig:bubblepop.png}). 
+\subsection{\bbc}
+Once the pangenome has been decomposed with \bbp in a tree whose information on the node distance from the root is stored in dictionary, \bbc make explicit the content of the bubbles and its position along a chosen reference sequence.    
 
+Within the dictionary, the beginning and the end nodes of a bubbles are identified by the fact that their distance from the root is unique, i.e. they are the only nodes with a specific distance from the root (Figure \ref{fig:bubblepop.png}C). All other nodes are inner nodes of bubbles and correspond to variable regions of the sequence. Furthermore nodes with the same distance from the root are in the same bubble.\\
 
-\subsubsection{\bbc}
-Once the pangenome has been decomposed with \bbp in a set of trees whose information are stored in dictionary, \bbp make explicit the content of the bubbles and its position along a chosen reference sequence.    
+\noindent
+The code I developed for \bbc works in three steps:
 
-Within the dictionary, the beginning and the end nodes of a bubbles are identified by the fact that their distance from the root is uniqe, i.e. they are the only nodes with a specific distance from the tree. (Figure \ref{fig:bubblepop.png}C). All other nodes are  inner nodes of bubbles and correspond to variable regions of the sequence, furthermore nodes with the same distance from the root are in the same bubble.\\
+\begin{enumerate}
+\item\textbf{Choice of the reference path}
 
-\bbc works in X steps
+Considering all the possible paths that connect the initial node and the final node of each bubble, I chose the first path in GFA file as reference (REF).
 
-\begin{itemize}
-
-
-\item\textbf{Possible paths and reference }
-Considering all the possible paths %COME SI FA? v aspiegato % 
+%Considering all the possible paths that connect the initial node and the final node of each bubble. I chose first path in GFA as reference (REF). I considered all the possible paths pairs(x,y) which x is the REF. I went through the bubbles and along the two paths I defined the variants.
+ %Sono andata nelle bubble e percorrendo i due path ho definito le varianti, OK SPIEGATO % 
 As implemented now, the first path in the GFA file is used as reference, however it is possible to set any available paths as reference.
 
-\item{variant calling }  A variant is a nodes supported by at least one path, whose sequence is different from the sequence of the corresponding node in the chosen reference.
+\item\textbf{Variant identification} In this step \bbc iterates over all available nodes to compare them with the corresponding reference node, where the correspondence is defined by the flanking nodes (Figure \ref{fig:path_ref.png})
+%quella di prima o questa di dopo? spostata qui perche' parla di varianti
+I considered all the possible paths pairs(x,y) which x is the REF. I went through the bubbles and along the two paths I defined the variants.
 
-\item\textbf{SNV and INDEL}
-For Deletion if the considerate node in the REF is the current node in the current path, it means that in the current path a node is missing, so there is a deletion respect to the REF.
-For Insertion if the considerate node in the current path is the current node in the ref, it means that in the current path there is a node that is missing in the REF, that is an insertion.
-
-For SNV if the sequence are different in the current path respect to the REF.
-
-\item \textbf{variant positioning} The variants are called respect to a path chosen as reference%NON E' vero, la posizione e' rispetto al REF .
+A node is called as a variant if: 
+\begin{itemize}
+    \item (i) it is supported by at least one path; 
+    \item (ii) the node sequence is different from the sequence of the corresponding reference node; 
+    \item (iii) if its distance from the root is the same as the one of the reference node, than the variant is classified as a Single Nucleotide Variants (SNV)
+    \item (iv) if its distance from the root is smaller that the one of the reference node then the variant is classified as a Deletion  
+    \item (v) if its distance from the root is greater that the one of the reference node then the variant is classified as an Insertion
 \end{itemize}
 
+\item \textbf{Variant positioning} This step defines the position of a variants with respect to the reference sequence. When the two paths were used to call the variants, the length of the sequences was taken into account in order to map the variants on the individual paths.%Todo:spiegare, spiegato
+\end{enumerate} 
+
+%QUando sono stati percorsi i due path per chiamare le varianti, si è tenuto conto della lunghezza delle sequenze per poter mappare le varianti sui singoli path.Example POS, for example (NODE1 ATG) POS is 3 (length of sequence); for (NODE2 AT) POS is 5 because is the sum of the length of the previous node sequence plus the current node length sequence.
+
+%aggiungere distance from root, tipo mettere root a sinistra e fare un asse con le distanze , tipo asse x 
+%scrivere invece dei numeri n1, n2, n3, n4, etc.. (con i numeri che fanno al caso, ovviamente). potresti pur efare un circolo e mettere n1, dentro, sarebbe piu' chiaro  si potrebbe anche mettere un sequenza semplice 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.00 \textwidth]{fig/path_ref.png}
+\decoRule
+\caption{\textbf{Variant identification by the \bbc function.} Nodes here are represented by their node names and sequences and their distance from the root is reported. A path is chosen as reference (REF) and used to iteration combination with all other possible paths. Within the iteration, nodes between paths (REF and the one under consideration) are compared. \\If a node in the path under consideration is present, has the same distance from root as REF, and is different from REF, then a \textbf{Single Nucleotide Variant (SNV)} is called. Instead, if a node in the path under consideration is not found in the REF, than the node distance from root is compared with the corresponding empty position on REF: an \textbf{Insertion} or a \textbf{Deletion} is called, according to if the node distance is greater or smaller, respectively.}
+%\caption{Scheme of the output of \textit{bubblecall} function. The path used as REF and call variant in a path}
+\label{fig:path_ref.png}
+\end{figure}
+
+%distanza root, sotto ognuno di ref e alt riga distanza root. 
+
+
+
+
+
+%figura con A. figura bubble, B. tabella tipo vcf con indel ecc.  C same as A ma piu; complesso  D same as B 
+
+%fare ora
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.00\textwidth]{fig/GraphchrXnew.pdf}
+\decoRule
+\caption{\textbf{Fig A: Bubble}. Path x represents the sequence used as a reference to describe variants that are present in a sequence analysed.} 
+\label{fig:bubble.png}
+\end{figure}
+
+
 %I obtained VCF.
-
-
-
-
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Subsection 
@@ -187,30 +165,8 @@ For SNV if the sequence are different in the current path respect to the REF.
 \setcounter{secnumdepth}{3}
 \subsection{gfa2vcf}
 %tolto the second, non c'e un ordine 
-The \textit{gfa2vcf} function of \vgp takes as input a graph in the GFA format and output a corresponding linear representation in the VCF format. To do this \textit{gfa2vcf} uses first \bbp to decompose the pangenome in a set of trees and then \bbc to transform the information of the graph in a linear format. 
+The code I developed for the \textit{gfa2vcf} function of \vgp takes as input a graph in the GFA format and output a corresponding linear representation in the VCF format. To do this \textit{gfa2vcf} uses first \bbp to decompose the pangenome in a tree and then \bbc to identify the variable sites. Finally the dictionary of the variable site is formatted according to the vcf specifications. 
 
-
-%PER LA FIGURA: va completata con una parte che fa vedere il GFA e se vuoi il VCF risulatante da questa bolla forse si puo' mettere questo esempio semplice e uno piu' complesso 
-\begin{figure}[H]
-\centering
-\includegraphics[width=1.10\textwidth]{fig/GraphchrXnew.pdf}
-\decoRule
-\caption{\textbf{Fig A: Bubble}. Path x represents the sequence used as a reference to describe variants that are present in a sequence analysed.} %aggiungere path
-\label{fig:bubble.png}
-\end{figure}
-
-
-%FIGURA FORSE NON necessaria 
-%\begin{figure}[H]
-%\centering
-%\includegraphics[width=1.10\textwidth]{fig/gfatovcfnew.pdf}
-%\decoRule
-%\caption{\textbf{Graph} GfatoVcf}
-%\label{fig:vgpop.pdf}
-%\end{figure}
-
-
-% non erano  chiare le definizioni di GFA, rest ail dubbio su SNV indel 
 {\small
 \begin{table}
 \caption{Correspondences between elements of the GFA and VCF}
@@ -236,22 +192,14 @@ The \textit{gfa2vcf} function of \vgp takes as input a graph in the GFA format a
 
 %non farei una sub sub section 
 %\subsubsection{Validation of the VCF obtained with \textit{gfa2vcf}}
-To validate the VCF obtaind using \textit{gfa2vcf}, I reconstructed a graph starting from it and using an existing tool, i.e. the functions \textit{vgconstruct} and \textit{vgview} from the \textsc{vgtool} library (Figure \ref{fig:validationgraph.png}A, adapted from \cite{vg}, (QUESTA VA COME REFERENZA \url{https://nicedoc.io/vgteam/vg}). Visual comparison of the graph used as input of \textit{gfa2vcf} and the one reconstructed with \textsc{vgtool}, shows a complete correspondence of the two graphs, suggesting that the \textit{gfa2vcf} works well (Figure \ref{fig:validationgraph.png}B).  
+To validate the VCF obtaind using \textit{gfa2vcf}, I reconstructed a graph starting from it and using an existing tool, i.e. the functions \textit{vgconstruct} and \textit{vgview} from the \textsc{vgtool}  library \cite{vg,vgteam}) (Figure \ref{fig:validationgraph.png}A). The graph used as input of \textit{gfa2vcf} and the one reconstructed with \textsc{vgtool}, are identical, suggesting that the \textit{gfa2vcf} works well (Figure \ref{fig:validationgraph.png}B).  
 
-%PERCHE' ripeter la definizione id variaton graphs?
-%Variation graphs provide a succinct encoding of the sequences of many genomes. 
-%A variation graph (in particular as implemented in vg) is composed of:
-%\begin{itemize}
-%\item nodes: which are labeled by sequences and ids
-%\item edges: which connect two nodes via either of their respective ends
-%\item paths: describe genomes, sequence alignments, and annotations (such as gene models and transcripts) as walks through nodes connected by edges
-%\end{itemize}
-%Tools in vg maintain paths as immutable during transformations of the graph. They use paths to project graph-relative data into reference-relative coordinate spaces. Paths provide stable coordinates for graphs built in different ways from the same input sequences.
+%%cambiare GFA start con GFA from \vgp  e GFA con GFA from \textsc{vgtools} DIDALSCALIA GIA@ CAMBIATA , 
 
-%%cambiare GFA start con GFA from \vgp  e GFA con GFA from \textsc{vgtools} DIDALSCALIA GIA@ CAMBIATA  
+%per Enza, non mi trovo perchè GFAstart from vgpop??? E' un GFA costruito indipendentemente che poi trasformo in VCF
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.00 \textwidth]{fig/validationgfa2.vcf.png}
+\includegraphics[width=0.80 \textwidth]{fig/validationgfa2.vcf.png}
 \decoRule
 \caption{Validation scheme of the \textit{gfa2vcf} function (\textbf{A}). the graph used as input from \vgp is identical to the one reconstructed using \textsc{vgtools} from the VCF obtained by \textit{gfa2vcf} (\textbf{B})}
 \label{fig:validationgraph.png}
@@ -265,44 +213,45 @@ To validate the VCF obtaind using \textit{gfa2vcf}, I reconstructed a graph star
 
 The \textbf{frequency of an allele} is an indication of how common the allele is in a population. It is calculated by counting how many times the allele appears in the population, dividing by the total number of copies of the gene.\\
 
-For a locus with \emph{p} alleles, the allele frequency of the \emph{i\textsubscript{th}} allele \emph{p\textsubscript{i}} in a population of haploid individuals is: \\
+For a locus with \emph{p} alleles, the allele frequency of the \emph{i\textsubscript{th}} allele \emph{p\textsubscript{i}} in a population of haploid individuals is: 
 
-Haploid allele frequency    $p\textsubscript{i} = \dfrac{i}{N}$\\
+Haploid allele frequency    $p\textsubscript{i} = \dfrac{i}{N}$
 
 \noindent
 where \emph{i} is the count of the alleles and \emph{N} is the number of individuals in the population.\\
 \noindent
-In a diploid populations the formula becomes: \\
+In a diploid populations the formula becomes: 
 
-Diploid allele frequency  $p\textsubscript{i} =  \dfrac{i}{2N}$$\\
+Diploid allele frequency  $p\textsubscript{i} =  \dfrac{i}{2N}$\\
 
-%The \textbf{frequency of a genotype} is the count of the genotype occurrence in the population. A locus with two alleles, \textit{A} and \textit{B} has three possible genotypes: \textit{AA, AB, BB}.  
-%frequency of B $q = {f(BB)} + \dfrac{1}{2} f(AB)$
-
-The \textit{gfa2allelefreq} function of \vgp takes as input a GFA format and output a file that contains the calculation of allele frequencies for variable loci. In \textit{gfa2allelefreq} the allele frequency correspond to the 
-
-
+The code I developed for the \textit{gfa2allelefreq} function of \vgp takes as input a graph in GFA format and a metadata file (with information on paths, individuals, and populations), and outputs a file that contains the allele frequencies for variable loci per each population. In \textit{gfa2allelefreq} the allele frequency corresponds to the number of paths that support a node (i.e. a variant) divided by the total number of paths actually realized. The frequencies of monomorphic nodes (i.e. frequency = 1) are not reported.  %attenzione: riusciamo a discriminare i paths effettivamente realizzati da tutti quelli possibili? (considered even REF)
+\textit{gfa2allelefreq} first uses \bbp and \bbc to read the graph, and than applies calculation of frequencies.
 
 %In this specific case I obtained two file of calculation, one from each population. 
 
-This calculation start with \textit{bubblepop}, after detection of bubble I calculate allele frequencies, for each variants the number of  paths  are  calculate  that  support  the  variant node divided  by  total  number  of  paths(considered even REF).
-Only allele frequencies different from 1 were considered. 
+ %descrivere metadata, info individui e haplo
  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Subsection 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \subsection{gfa2genfreq}
 
-The fourth function of \vgp is the \textit{gfa2genfreq}, which takes as input a GFA format, and as output a file that contains the calculation of genotype frequencies.
+The \texbf{frequencies of a genotype} in a population is the ratio between the count of individuals with a given genotype and the total number of individuals in the population. For haploid population genotypic frequencies coincide with allelic frequencies.  \cite{brooker2014principles}.
+%GIA DETTO In population genetics, the genotype frequency is the frequency or proportion of genotypes in a population. 
 
-Genotype frequencies \cite{brooker2014principles} in a population is the number of individuals with a given genotype divided by the total number of individuals in the population. In population genetics, the genotype frequency is the frequency or proportion of genotypes in a population. 
+%$f(a) = \dfrac{(Aa) + 2 x (aa))}{2 x (AA) + 2 x (Aa) + 2 x (aa)}$
+For a locus with \emph{g} alleles in a population of diploid individuals, the number of possible genotypes is the sum of the integers between 1 and g. As an example, for a locus with 3 alleles. 1+2+3=6 genotypes are possible. The genotype frequency of the \emph{i\textsubscript{th}} genotypes \emph{g\textsubscript{i}} is: 
 
-$f(a) = \dfrac{(Aa) + 2 x (aa))}{2 x (AA) + 2 x (Aa) + 2 x (aa)}$
+Genotype frequency    $g\textsubscript{i} = \dfrac{i}{2N}$\\
 
-I counted ATGC in a position and I checked the reference base and calculate for each allele the frequency (count/numhaplotype).
+\noindent
+where \emph{i} is the count of the individuals with genotype \emph{g\textsubscript{i}} and \emph{N} is the number of individuals in the population.\\
+
+The code I developed for the \textit{gfa2genfreq} function of \vgp takes as input a graph in GFA format and a metadata file (with information on paths, individuals, and populations) and outputs a file that contains the genotype frequencies of all possible genotypes. In \textit{gfa2genofreq} \emph{2N} is the number of paths actually realized and for each genotype \emph{g\textsubscript{i}}, \emph{i} is determined using the information of the metadata. 
+\textit{gfa2genfreq} first uses \bbp and \bbc to read the graph, and than applies calculation of genotypes.
+%%%non cpaisco 
+%I counted ATGC in a position and I checked the reference base and calculate for each allele the frequency (count/numhaplotype).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -311,55 +260,46 @@ I counted ATGC in a position and I checked the reference base and calculate for 
 
 
 \subsection{gfa2fst}
+%referenza wright fisher con calma
+%metti figura da paper TIG 
+The Wright’s fixation index ($F\textsubscript{st})$ is a measure of population differentiation due to genetic structure. It is estimated from genetic polymorphism data, such as SNV or microsatellites. Several formulae exists for its calculation among which the one that estimates it as the standardized variance of allele frequencies among sub-populations:\\
 
-The fifth function of \vgp is the \textit{gfa2$F\textsubscript{st}$}, which takes as input allele frequencies file, and as output a file that contains the calculation of $F\textsubscript{st}$.
+$F\textsubscript{st} = \dfrac{s^{2}}{p(1-p)}$\\
 
-The fixation index is a measure of population differentiation due to genetic structure. It is frequently estimated from genetic polymorphism data, such as single-nucleotide polymorphisms (SNP) or microsatellites developed as a special case of
-the Wright’s fixation index ($F\textsubscript{st})$ is a measure of population differentiation due to genetic structure. 
+with \emph{s} and \emph{p} being the variance and mean, respectively, of the allele frequency among the considered populations for a specific locus. $F\textsubscript{st}$  ranges from 0, when all sub-populations are identical, to 1, when different alleles are fixed in different sub-populations \cite{barbujani2010human}.\\
 
-It can be estimated as the standardized variance of allele frequencies among sub-populations.
+%parliamone, metadata? 
+The code I developed for the \textit{gfa2fst} function of \vgp, takes as input an allele frequencies file, and as output a file that contains the calculation of $F\textsubscript{st}$.
 
-$F\textsubscript{st} = \dfrac{s^{2}}{p(1-p)}$
-
-with s and p being the variance and mean, respectively, of the allele frequency. 
-
-$F\textsubscript{st}$ \cite{barbujani2010human} ranges from 0, when all sub-populations are identical, to 1, when different alleles are fixed in different sub-populations.
-
-
-The central points of this function are three:
-
-
+\textit{gfa2fst} first uses \bbp and \bbc to read the graph, and than applies \textit{gfa2allelefreq} to calculate allele frequencies and than calculates $F\textsubscript{st}$ following these steps: 
 
 \begin{itemize}
-\item\textbf{Mean of  allele frequencies}:  obtained by \textit{gfa2allelefreq} from two populations. These frequencies represent 
+\item\textbf{Mean and standard deviation of the allele frequencies among populations}. First the allele frequency per each population in the metadata it is obtained applying \textit{gfa2allelefreq}, and then the mean and s.d. are calculated:  
 \begin{verbatim}
-mean = statistics.mean([freq_pop1, freq_pop2])
+p = statistics.mean([freqpop1, freqpop2])
 \end{verbatim}
- 
+$\mathrm{s}^{2}$= statistics.pvariance([freqpop1, freqpop2])
 \item\textbf{Calculation of $F\textsubscript{st}$}
-
 \begin{verbatim}
-fst = statistics.pvariance([freq_pop1, freq_pop2])/((mean)*(1-mean))
 \end{verbatim}
-\item\textbf {Mean of $F\textsubscript{st}$} from 100 replicate. 
-
-\begin{verbatim}
-mean_fst_list.append(statistics.mean(fst_list))
-\end{verbatim}
+$F\textsubscript{st} = \dfrac{s^{2}}{p(1-p)}$
 \end{itemize}
 
 
+%\vspace{8cm}
 
+\subsection{seqgen2gfa+vcf}
+The code I developed for the \textit{seqgen2gfa+vcf} function of \vgp takes as input the output of seqgen and outputs its representation in GFA and VCF formats. To create the GFA file, I created a segment for each nucleotide in the reference. Then, I added new segments for the nucleotide positions where there were variations respect to the reference. The same variations were used to produce the corresponding VCF file.
 
-\vspace{8cm}
-
-
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Section 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Application to simulated data}
-I exploited analyses of genetic population on simulated data to already know what to expect.
+%un po' contorta correggere 
+\section{Application of \vgp to simulated data}
+To test if the calculation made by \vgp are accurate, we applied \vgp functions to data for which we can predict ranges of expectations for the parameters calculated by \vgp. In particular we used sequence data produced by simulation under a known demographic scenario. 
+
+%I exploited analiculayses of genetic population on simulated data to already know what to expect.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -368,16 +308,9 @@ I exploited analyses of genetic population on simulated data to already know wha
 
 \subsection{Simulation Scenario and Tools}
 
-\subsubsection{MS}
+As simulation scenario I considered a model adapted from \cite{hudson2004ms} with two diploid populations separating without subsequent migration (Figure \ref{fig:population.pdf}). The first population is bigger in size compared to the second, and through time develops first maintaining constant size and exponentially expanding in the last 5k generations. The second develops through time maintaining constant size. I considered three possible scenario for separation time: 5k (T1), 10k (T2), and 15k (T3) generations ago. The expectation is that the longer the separation time, the higher will be the $F\textsubscript{st})$ , with scenario T3 having the higher $F\textsubscript{st})$ compared to T2 and T1. \\
 
-I used MS \cite{hudson2004ms}, a program to generate samples under a variety of neutral models. The purpose of this program is to allow one to investigate the statistical properties of such samples, to evaluate estimators or statistical tests, and generally to aid in the interpretation of polymorphism data sets.
-
-The program ms can be used to generate many independent replicate samples under a variety of assumptions about migration, recombination rate and population size. I simulated two populations that are divided into three different times. I expected Fst to be greater for the two populations more distantly divided over time.(T3)
-
-%forse citare nei metodi pacchetto usato per fare i plot?
-
-
-
+Simulations can provide sequence data through all the time spanning the demographic model used, however to simulate a living population we are interested only in the sequences at time zero, i.e. at the end of the simulations.\\
 
 \begin{figure}[H]
 \centering
@@ -388,30 +321,31 @@ T1 (0.031254 Ne), T2(0.0625 Ne),T3(0.09375 Ne)}
 \label{fig:population.pdf}
 \end{figure}
 
+\subsubsection{Sequence data simulation using \textbf{ms}}
+%ref piu' recenti 
+\textbf{ms} \cite{hudson2004ms} is a software that generates sequence samples under a variety of neutral models, allowing one to investigate the statistical properties of such samples, to evaluate estimators or statistical tests, and generally to aid in the interpretation of polymorphic data sets. The program ms can be used to generate many independent replicate samples under a variety of assumptions about migration, recombination rate and population size.\\ 
+
+When simulated 100 replicates of eighty individuals in two populations (forty each), that divided 5k generations ago (T1) I used the following command line: 
 \begin{verbatim}
-In the first case I simulated two populations that divided 5.000 generations ago.
-
-
-ms 80 100 -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.03125 2 1   
-
-I simulated two populations that divided 10.000 generations ago.
-
-ms 80 100 -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.0625 2 1   
-
-I simulated two populations that divided 15.000 generations ago.
-
-ms 80 100 -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.09375 2 1   
+ms 80 100 -T -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.03125 2 1   
 \end{verbatim}
 
-Explanation the parameters of ms:
+%I simulated two populations that divided 10.000 generations ago.
+%\begin{verbatim}
+%ms 80 100 -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.0625 2 1   
+%\end{verbatim}
+
+%I simulating two populations that divided 15k generations ago 
+%\begin{verbatim}
+%ms 80 100 -t 11.2 -I 2 40 40 -g 1 44.36 -n 2 0.05 -eg 0.03125 1 0.0 -ej 0.09375 2 1   
+%\end{verbatim}
+
+The explanation of the parameters used by ms is the following:
 
 \begin{itemize}
-\item\textbf{nsam<nsample>:}
-is the number of copies of the locus in each sample.
+\item\textbf{nsam<nsample>:} this is the first number after the command ms and it is the number of sequences of the locus in each replicate; 
 
-\item\textbf{nrep<nreplicate>:}
-is the number of independent samples to generate;
-
+\item\textbf{nrep<nreplicate>:} this is the second number after the command ms and it is the number of independent replicates to generate;
 
 \item\textbf{t <mutationrate>:}
 is equal to $$4N0\mu$$ where N0 is the diploid population size and where u is the neutral mutation rate for the entire locus;
@@ -430,15 +364,39 @@ pop1 stop growing at time 0.03125;
 
 \item\textbf{ej <join>:}
 Pop1 join with pop2. It is the parameter that change in three command. 
+\end{itemize}
 
-I convert mstogfa but I need the information about the links between the bubbles.  
+To simulate the T2 and the T3 parameters the difference in the command line is in the ej parameter that is 0.0625 and 0.0937, respectively. For each scenario I simulated 100 replicates of forty individuals per population for two populations. The output of ms is a file with data on the variable sites for each individual for each population for each replicate. 
 
-\subsubsection{Seq-Gen}
-I needed the whole sequence rebuilt and the links between the bubbles """SPIEGARE PERCHE' E/O PER FARCI COSA.
+%FIGURA FRASE TRE TEMPI SIMULAZIONI 
 
-Seq-Gen \cite{rambaut1997seq} is a program that will simulate the evolution of nucleotide sequences along a phylogeny, using common models of the substitution process. A range of models of molecular evolution are implemented, including the general reversible model. 
+\subsubsection{Conversion of simulated data in the GFA format}  
 
-Seq-Gen requires a tree as input, therefore I added the parameter -T to all the MS commands to obtained a tree as output. With seq-gen, I reconstructed the sequences for the three different simulated times.
+To be processed by \vgp, the simulated data must be converted in the GFA format. We did this in two steps. First we transformed the data on variable sites obtained by ms into sequences using Seq-Gen \cite{rambaut1997seq}, than we transformed sequences into graphs with a utility function that I developed, named \textit{seqgen2gfa+vcf}. 
+
+%I needed the whole sequence rebuilt and the links between the bubbles """SPIEGARE PERCHE', per usare odgi"g
+
+
+%I convert mstogfa but I need the information about the links between the bubbles. 
+
+
+While ms provides information on variable sites it does not provide information on the invariable sequence between variable sites, that is necessary to build a graph. I obtained the information on invariable sites exploiting the tree connecting the simulated sequences that is also an output of ms. A tree is an entity that describes relationships between objects (Figure \ref{fig:phylogenies.jpg}). The tips of the tree are called leaves; leaves are connected by branches, whose length is proportional to the observed differences between the leaves; the coalescence of two branches generates a node or vertex. In our case the leaves represent the simulated sequences that we are actually interested in because they represent the individuals at current time. The nodes indicate the most common ancestor of sequences, the root of the tree is a special node located at the beginning of the tree. 
+
+%aggiungere due colori uno per pangenomica uno per evolutonary, la figura serve per ora e per dopo
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\textwidth]{fig/phylogenies.jpg}
+\decoRule
+\caption{The crucial components of a phylogenetic tree are nodes, branches, leaves, and the root." \textit{Adapted from} \cite{phylogenetictree}"} 
+\label{fig:phylogenies.jpg}
+\end{figure}
+
+Seq-Gen \cite{rambaut1997seq} is a program that simulates the evolution of nucleotide sequences along a phylogeny, using common models of the substitution process. A range of models of molecular evolution are implemented, including the general reversible model. 
+
+Using the tree obtained by ms, Seq-Gen reconstructed the entire sequences, including the invariable parts, for all replicates under the three simulated times. The command lines for Seq-Gen are: 
 
 \begin{verbatim}
 seq-gen -mHKY -l 40 -s .2 -wa -z 783763255346462154 <treems40popT1> T1.seqgen
@@ -449,7 +407,7 @@ seq-gen -mHKY -l 40 -s .2 -wa -z 783763255346462154 <treems40popT3> T3.seqgen
 
 \end{verbatim}
 
-Explanation of parameters:
+The explanation of the parameters is:
 
 \begin{itemize}
 
@@ -461,9 +419,11 @@ Explanation of parameters:
 Write Ancestral Sequences. This option allows the user to obtain the sequences for each of the internal nodes in the tree obtained with ms 
 \end{itemize}
 
-\end{itemize}
+%descrizione seqgen2gfa+vcf
 
-\subsection{Application vgpop}
+\subsection{Calculation of  $F\textsubscript{st})$  from simulated data using \vgp}
+
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=1.00\textwidth]{fig/pipeline_new.png}
@@ -514,7 +474,7 @@ Fst is the same from GFA and VCF file.
 
 
 
-\section{Study Cases}
+\section{Application of \vgp to real data: allele frequencies at variable loci of the HLA region}
 
 I applicate two functions of \vgp to pangenomes of HLA. In particular I calculate \textit{gfa2vcf} and \textit{gfa2allelefreq}.
 

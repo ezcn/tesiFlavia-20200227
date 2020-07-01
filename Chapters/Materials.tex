@@ -1,19 +1,17 @@
 % Chapter discussion
 
-\chapter{Materials and Methods(5-10 pagine} % Main chapter title
+\chapter{Materials and Methods}  %(5-10 pagine} % Main chapter title
 
 \label{Chapter7} % For referencing the chapter elsewhere, use \ref{Chapter7} 
 
 %----------------------------------------------------------------------------------------
 % Define some commands to keep the formatting separated from the content 
-porta le metodiche utilizzate per lo svolgimento degli esperimenti descritti nella sezione “Risultati ottenuti dal candidato”.
 
-%chiedere ad Enza, se per seqgen metto albero
 
 \section{Bubblepop} 
 \subsection{Odgi}
 
-I built the \textit{bubblepop} function utilizing the odgi library(\cite{eizenga2020succinct})\\
+I built the \textit{bubblepop} function utilizing the odgi library(\cite{eizenga2020succinct}).
 
 odgi (Optimized Dynamic Graph Implementation) is based on a node centric encoding of the graph that is designed to improve cache coherency when traversing or modifying the graph. This encoding is split between graph topology and paths, which is important for achieving a good balance of run time performance and memory usage on real-world graphs with large path sets. Each node’s sequence and edges are encoded in a byte array using a variable-length integer encoding scheme. Edges are described in terms of a relative offset between the rank of this node in the sorted array of nodes of the graph and the node to which the edge arrives.
 
@@ -64,7 +62,7 @@ def bfs(graph, root):
                 queue.append(neighbour) 
 \end{verbatim}
 
-I implement this algoritm that is availabe on the git repository of the project (\url{}) 
+I implement this algoritm that is availabe on the git repository of the project. 
 
 %citare: https://www.programiz.com/dsa/graph-bfs 
 
@@ -102,20 +100,7 @@ This code start with the dictionary that there is in \textit{bubblepop}, I conti
 \begin{itemize}
 \item Chose path as REF: I chose a path (or paths) from the beginning by recording sequences, it is corresponds to REF. Sequence not present in REF, the center of bubble is ALT.
 
-%mettere codice? tipo questo esempio
-%if current_node_id_ref == current_node_id_path:
-                    
-                    %node_seq = g.get_sequence(g.get_handle(current_node_id_ref))
-                    %pos_ref += len(node_seq)
-                    %pos_path = pos_ref
 
-                    %current_index_step_ref += 1
-                    %current_index_step_path += 1
-                %else:
-                    %succ_node_id_path = path[current_index_step_path + 1]
-                    %succ_node_id_ref = ref_path[current_index_step_ref + start_node_index_in_ref_path + 1]
-                    %if succ_node_id_ref == current_node_id_path:
-                    %print(DEL)
                     
 \item Deletion in VCF: If the succ node in the (path that I chose as REF) REF is the current node in the current path, it means that in the current path a node is missing, so there is a DELETION respect to the reference.
 
@@ -124,18 +109,19 @@ This code start with the dictionary that there is in \textit{bubblepop}, I conti
 \item SNV in VCF: Else if sequence is different from the same node in REF and ALT, it is a SNV.
 
 \item POS in VCF: Length of sequence in a node corresponds to POS.
-POS, for example (NODE1 ATG)POS is 3 (length of sequence); for (NODE2 AT) POS is 5 because is the sum of the length of the previous node sequence plus the current node length sequence.   
-\end{itemize}
+POS, for example (NODE1 ATG)POS is 3 (length of sequence); for (NODE2 AT) POS is 5 because is the sum of the length of the previous node sequence plus the current node length sequence. \end{itemize}
 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.70 \textwidth]{fig/gfa2vcf.png}
+\includegraphics[width=0.70\textwidth]{fig/gfa2vcf.png}
 \decoRule
 \caption{\textit{GFAstart to VCF} transforms a GFAstart in VCF}
-\label{fig:validationgraph.png}
+\label{fig:validation.png}
 \end{figure}
 \subsection{Validation VCF}
+
+
 
 I use vg tools for working with genome variation graphs for validate VCF obtained from GFA. 
 
@@ -160,7 +146,7 @@ The command line takes in input the compressed file from BGZIP and produces an i
 \begin{itemize}
 \item  vg construct and view
 \end{itemize}
-I use indexed file as input of vg construct with reference that I chose. For obtained this output represent in Fig: ( \ref{fig:validationgraph.png} B). I use vgview.
+I use indexed file as input of vg construct with reference that I chose. For obtained this output represent in Fig: ( \ref{fig:validation.png} B). I use vgview.
 
 \begin{verbatim}
 vg construct -v output.vcf.gz -r reference.fa > VcftoGraph.vg
@@ -246,6 +232,9 @@ ggplot(final, aes(obs, color=time, linetype=type)) + geom_density() + xlab("FST"
 
 \section{pangenome HLA}
 
+\begin{itemize}
+   
+
 I will use tools supporting the variation graph data model, as described at the pangenome tools (\url{https://pangenome.github.io/}), to build pangenome data from HLA genomes.\\
 
 I start with 9 sequences from chr6 Homo Sapiens, downloads its in formato fasta file. 
@@ -303,12 +292,12 @@ vg deconstruct -p "gi|568815592:30489405-30494204" E-3133.xg
 
 I obtained the same result. 
 
-For visualize (\ref{fig:pangenome.png}) I use this commands:
+For visualize (\ref{fig:pangenome.pdf}) I use this commands:
 
 \begin{verbatim}
 odgi sort -i E-3133.og  -o - | odgi viz -i - -o E-3133.sorted.png -x 15000
 \end{verbatim}
-
+\end{itemize}
 
   
 
