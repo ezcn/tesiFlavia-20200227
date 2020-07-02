@@ -27,7 +27,7 @@
 
 The process of sequencing determines the exact order of the monomers in a biomolecule, the nucleotides in the case of DNA sequencing. Sequence analyses has many applications, such as identifing mutations or establish phylogenetic relationships among species. Sanger's method marked the beginning of genomics research and has been successfully until a decade ago when \textit{next generation sequencing (NGS)} was introduced to overcome the main limit of the Sanger sequencing,\cite{Sanger5463} i.e. the sequencing volume.
 
-The main feature of NGS sequencing is the high-throughput. Unlike the traditional Sanger method, the NGS allows to analyze many sequences in parallel, reducing analysis times and costs. This reduction has improved over time: the sequencing of the first human genome, based on the Sanger method, required an investment of 2.7 billion dollars in about ten years \cite{ \footnote{Estimated in 1991 dollars, as per \url{https://www.genome.gov/human-genome-project/Completion-FAQ}}, while today the sequence of a human genome can be obtained for less than 1k dollars in one day \cite{sequencing}. Nevertheless, NGS has limitations too. One essential limitation is the initial amplification of DNA sequences, which can introduce random errors in the sequence and leads to the loss of "accessory" information, such as the constellation of epigenetic modifications that are important for understanding the function of a fragment of genome \cite{sequencing}. A second, and more severe limitation from the perspective of sequence analysis, is the short length of sequencing reads, which are typically shorter than 250bp. This greatly limits the fraction of a genome which can be accessed by this sequencing technology, and complicates the discovery and genotyping of structural variation.
+The main feature of NGS sequencing is the high-throughput. Unlike the traditional Sanger method, the NGS allows to analyze many sequences in parallel, reducing analysis times and costs. This reduction has improved over time: the sequencing of the first human genome, based on the Sanger method, required an investment of 2.7 billion dollars in about ten years \cite{NIH:genomeprojectFAQ}, while today the sequence of a human genome can be obtained for less than 1k dollars in one day \cite{sequencing}. Nevertheless, NGS has limitations too. One essential limitation is the initial amplification of DNA sequences, which can introduce random errors in the sequence and leads to the loss of "accessory" information, such as the constellation of epigenetic modifications that are important for understanding the function of a fragment of genome \cite{sequencing}. A second, and more severe limitation from the perspective of sequence analysis, is the short length of sequencing reads, which are typically shorter than 250bp. This greatly limits the fraction of a genome which can be accessed by this sequencing technology, and complicates the discovery and genotyping of structural variation.
 
 To overcome these limitations, research is now pointing towards \textit{third generation} methods that are oriented toward sequencing very long regions (ideally whole chromosomes) without  prior amplification. Among these methods, nanopore sequencing derives from an observation from the 1980s that when a single-stranded DNA passes through a very narrow channel (nanopore) (Fig:\ref{fig:nanopore.png})generates a flow of ions with a characteristic pattern, which depends uniquely on its sequence. This technology allows sequencing millions of nucleotides without prior amplification of DNA fragments. \cite{wiki:nanopore}.
 
@@ -49,54 +49,64 @@ To overcome these limitations, research is now pointing towards \textit{third ge
 %TODO: REFERENCE BIAS chiedere ad Erik
 %Genomics studies are based on two models: standard and alternative models. 
 
-Standard approaches in sequence analysis relate sequences to a single linear reference genome. Sequence fragments produced by NGS are mapped and assembled against a reference genome, and genetic variants are identified through comparison with it. While being an efficient way of processing sequence information, this approach has a fundamental problem, i.e. substantial difference from the reference sequence are hard to observe and describe. This phenomenon is defined as \textit{reference bias}, i.e.  DNA fragments carrying the reference allele will be more likely to map successfully, or receive higher quality scores compared to alternate alleles. \cite{eizenga2020pangenome} 
+Standard approaches in sequence analysis relate sequences to a single linear reference genome. Sequence fragments produced by NGS are mapped and assembled against a reference genome, and genetic variants are identified through comparison with it. While this is an efficient way of processing sequence information, the approach has a fundamental problem, i.e. substantial difference from the reference sequence are hard to observe and describe. This phenomenon is defined as \textit{reference bias}, i.e.  DNA fragments carrying the reference allele will be more likely to map successfully, or receive higher quality scores compared to alternate alleles \cite{eizenga2020pangenome}.
 
 
-Pangenomic methods allow to overcome limitations of the use of the reference genomes, relating all genomes directly to each other. In pangenomic approches, sequence and variation are combined. This practice is still new, and research into ways to design, implement, and apply this model is ongoing.  \cite{eizenga2020pangenome} 
+Pangenomic methods allow us to overcome limitations of the use of the reference genomes, relating all genomes directly to each other. In pangenomic approaches, sequence and variation are combined. This practice is still new, and research into ways to design, implement, and apply this model is ongoing \cite{eizenga2020pangenome}.
+To guide my exposition of these methods, I will refer to (Figure \ref{fig:genomevspangenome.png}).
 
-In reference-based genomic analyses (\ref{fig:genomevspangenome.png} \textbf{a i}), all genomes (A–D) are compared with each other via their relationship to the reference genome (R).
+
+In reference-based genomic analyses (Figure \ref{fig:genomevspangenome.png} \textbf{a i}), all genomes (A–D) are compared with each other via their relationship to the reference genome (R).
 In a pangenomic analyses (Figure \ref{fig:genomevspangenome.png} \textbf{a ii)},  all genomes are compared to each other, from which a particular reference is chosen arbitrarily. 
 When extending the analysis with a new genome, (Figure \ref{fig:genomevspangenome.png} \textbf{a iii}) one adds it to the genomic model by comparing it with the reference genome.
 In a pangenomic analyses instead (Figure \ref{fig:genomevspangenome.png} \textbf{a iv}), when a new genome is added, it is compared directly with all other genomes in the model.
  
- 
-% DA    qui in poi controllare con erik che si fa prima  
-Regions of some genomes (\ref{fig:genomevspangenome.png} b) are unalignable against the reference and cannot be represented in a list of variants. A graphical model of the genomes allows a direct all-to-all comparison (\textbf{ii}), capturing all of their sequence relationships.
+Some regions of some genomes (\ref{fig:genomevspangenome.png} b) are unalignable against the reference and cannot be represented in a list of variants. A graphical model of the genomes allows a direct all-to-all comparison (\textbf{ii}), capturing all of their sequence relationships.
 
-A collection of sequences representing a pangenome (\ref{fig:genomevspangenome.png} c). Multiple sequence alignment of the sequences captures their mutual relationships (\textbf{ii}).
+%A collection of sequences representing a pangenome (\ref{fig:genomevspangenome.png} c). Multiple sequence alignment of the sequences captures their mutual relationships (\textbf{ii}).
 
-(\ref{fig:genomevspangenome.png} d) In a de Bruijn graph, sequences are represented without bias, but variants may
-correspond to larger graph structures. (\textbf{ii}) An acyclic sequence graph is equivalent to the multiple sequence alignment. (\textbf{iii}) A generic sequence graph can compactly represent a structural variant (shown in orange), using edges between the forward and reverse strands of
-the graph to indicate the presence of an inversion.
+In a de Bruijn graph (\ref{fig:genomevspangenome.png} d), sequences are represented without bias, but the overall structure of the graph depends on a fixed parameter $k$, and repeats of sequences of this length will cause a collapse in the overall structure of the graph.
+Despite this limitation, variants with unique $k$-contexts will be represented in structures in the graph structures (\textbf{ii}).
+An acyclic sequence graph is equivalent to the multiple sequence alignment (\textbf{iii}).
+A generic sequence graph can compactly represent a structural variant (shown in orange), using edges between the forward and reverse strands of the graph to indicate the presence of an inversion.
 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=1.00\textwidth]{fig/pangenome_genome.png}
 \decoRule
-\caption{Genomics versus pangenome (\textbf{A}), Linear representation with variants and Graphical representation compressed (\textbf{B})  Unaligned sequences and multiple sequence alignment (\textbf{C}), three types of graphs(\textbf{D}) \cite{eizenga2020pangenome}}
+\caption{Genomics versus pangenome (\textbf{A}), Linear representation with variants and Graphical representation compressed (\textbf{B})  Unaligned sequences and multiple sequence alignment (\textbf{C}), three types of graphs(\textbf{D}). Reprinted from \cite{eizenga2020pangenome}.}
 \label{fig:genomevspangenome.png}
 \end{figure}
 
 
 \section{Genetic variation in graphs}
 %TODO: comment Type of variants by size and ability to detect them
-The comparison of the sequence of multiple  genomes allow the identification of regions that present differences, i.e. genomic variants (Fig:\ref{fig:typeOfVariants}).  
+The comparison of the sequence of multiple  genomes allow the identification of regions that present differences.
+These genomic variants compactly describe the differences between genomes, and are thus essential to understanding the relationship between the genome and parameters of interest related to genome function (phenotype) or lineage (phylogeny) (Fig:\ref{fig:typeOfVariants}).
+In essence, in genomic analyses, we consider the alleles at given variable loci.
+Particular combinations of alleles give rise to particular phenotypes, or indicate a particular history of the given segment of DNA in which they reside.
 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{fig/typeOfVariants.jpeg}
 \decoRule
-\caption{\textbf{Type and size of genetic variants.}"\textit{Adapted from} \cite{pollex2007copy}"} 
+\caption{\textbf{Type and size of genetic variants.} \textit{Adapted from} \cite{pollex2007copy}.} 
 \label{fig:typeOfVariants}
 \end{figure}
 
-In graphs genetic variants appear as circles or \textit{bubbles}. In the handlegraph there are five important elements described in Figure \ref{fig:gfa.png}:
+In pangenome variation graphs, genetic variants appear as \textit{bubbles}. These sites have a common starting context (a single inbound node), a common exit point (a single outbound node), and a diversity of possible paths that connect the two, each of which represents an allele.
+
+I consider these bubbles in the context of a data model developed to represent the basic components of variation graphs, the \emph{handlegraph} abstraction.
+This data structure breaks down the elements of a variation graph and proposes a programming interface based on them.
+I use this data model as the basis for algorithms to find bubbles, their alleles, and the frequencies of these alleles among the genomes embedded in the graph.
+
+In the handlegraph there are five important elements described in Figure \ref{fig:gfa.png}:
 \begin{itemize}
 \item\textbf{Nodes} represented by yellow rectangles. Each node is associated with a numeric ID and a sequence. 
 
-\item\textbf{Strand Forward and reverse}. DNA strands have forward (+) and reverse (-) orientation. Each node contains a forward and reverse handle (red solid and dashed rectangles, respectively). Handles show the node identifier, the direction (+ or -), and the sequence of the handle.
+\item\textbf{Strand}. DNA has two strands, which we represent in variation graphs as the forward (+) and reverse (-) orientation of a node. Each node contains a forward and reverse handle (red solid and dashed rectangles, respectively). Handles show the node identifier, the direction (+ or -), and the sequence of the handle.
 
 \item\textbf{Edges} are connections between nodes, repesented by arrows in the figure.
 
@@ -117,7 +127,7 @@ In (Figure \ref{fig:gfa.png}) the first two paths differ by a single nucleotide 
 \label{fig:gfa.png}
 \end{figure}
 
-When only two variants (of one or more bases) are present, the bubble looks like a circle, while less simple patterns are referred as \textit{superbubbles} (Figure \ref{fig:sup_bub.png})
+When the bubble does not contain any internal bubble structures, we consider the bubble to be "simple", while nested bubbles are are referred as \textit{superbubbles} (Figure \ref{fig:sup_bub.png})
 %Variants are coding in the graph as bubbles. 
 
 \begin{figure}[H]
@@ -129,8 +139,8 @@ When only two variants (of one or more bases) are present, the bubble looks like
 \end{figure}
 
 
-The superbubble is a more complex subgraph type in which a set of (not necessarily disjoint) paths start and end at common source and sink nodes.\cite{paten2018superbubbles}.
-Refering the definition from \cite{onodera2013detecting}, any pair of distinct vertices equation in a digraph (Fig: \ref{fig:sup_bub.png}A):
+The superbubble is a more complex subgraph type in which a set of (not necessarily disjoint) paths start and end at common source and sink nodes \cite{paten2018superbubbles}.
+Following the definition from \cite{onodera2013detecting}, any pair of distinct vertices equation in a digraph (Fig: \ref{fig:sup_bub.png}A):
 %OK x e y e X se le metti anche sulla figura altrimenti e' diffcile seguire 
 \begin{enumerate}
 \item reachability: y is reachable from x.
@@ -145,9 +155,9 @@ Refering the definition from \cite{onodera2013detecting}, any pair of distinct v
 \end{enumerate}
 
 %I'm concentred for \textit{bubblepop} to a case specific of a superbubble i.e  bubbles (Fig: \ref{fig:sup_bub.png})
-In my project I focused on a specific case of a superbubble i.e. a bubble (Fig: \ref{fig:sup_bub.png}) to implement the core function of the library that is named \textit{bubblepop}. 
+In my project I focused on an algorithm to detect simple, non-nested bubbles (Fig: \ref{fig:sup_bub.png}). This algorithm is the core function of the \textit{bubblepop} library.
 
-A bubble consists of multiple directed unipaths from a vertex\textbf{ v} to a vertex \textbf{u} and is commonly caused by a small number of errors in the centre of reads.\cite{brankovic2016linear}. The bubble may be generalized to the idea of a superbubble, which is a directed, acyclic component of a graph with a single head and tail node.\cite{onodera2013detecting}.
+A bubble consists of multiple directed unipaths from a vertex $v$ to a vertex $u$ and is commonly caused by a small number of errors in the centre of reads.\cite{brankovic2016linear}. The bubble may be generalized to the idea of a superbubble, which is a directed, acyclic component of a graph with a single head and tail node.\cite{onodera2013detecting}.
 
 A homologous sequence corresponding to the common start
 and end nodes in the bubble flanks two or more alternative alleles in the middle.\cite{garrison2019graphical}.Bubbles can nest and contain more complicated internal structures between the paths
@@ -167,7 +177,7 @@ Variant Call Format (VCF) is a text file format and is a generic format for stor
 \centering
 \includegraphics[width=1.00\textwidth]{fig/vcf.png}
 \decoRule
-\caption{AMPLIARE (\textbf{A}), Linear representation with variants (VCF)) Fig:\cite{10.1093/bioinformatics/btr330}}
+\caption{(\textbf{A}), Linear representation with variants (VCF)) Fig:\cite{10.1093/bioinformatics/btr330}}
 \label{fig:vcf.png}
 \end{figure}
 

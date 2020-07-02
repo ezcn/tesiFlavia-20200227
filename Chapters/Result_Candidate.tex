@@ -149,7 +149,7 @@ A node is called as a variant if:
 %fare ora
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.00\textwidth]{fig/GraphchrXnew.pdf}
+\includegraphics[width=1.00\textwidth]{fig/bubblesimpleandcomplex.png}
 \decoRule
 \caption{\textbf{Fig A: Bubble}. Path x represents the sequence used as a reference to describe variants that are present in a sequence analysed.} 
 \label{fig:bubble.png}
@@ -314,7 +314,7 @@ Simulations can provide sequence data through all the time spanning the demograp
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1.10\textwidth]{fig/populationthreetime.png}
+\includegraphics[width=1.00\textwidth]{fig/populations.png}
 \decoRule
 e\caption{\textbf{Demographic models used as simulation scenario.} The y-axis is the time before present and time 0.00 correspond to the time when the sequence data is reported. The time is in units of 4Ne, where Ne represent the effective population size. Initially (time 0.12) there is only one ancestral population. After a number of generations the ancestral population splits in two populations evolving in isolation. I considered three possible times of separation (T1-3). The expectation is that the highest is the separation time the highest is the genetic distance between the two populations measured as $F\textsubscript{st}$.} 
 \label{fig:population.pdf}
@@ -421,7 +421,7 @@ I calculated $F\textsubscript{st}$ from the pangenome of the simulated data usin
 \centering
 \includegraphics[width=1.00\textwidth]{fig/Fstvcftoolsandvgpop.png}
 \decoRule
-\caption{\textbf{Fig:valure of Fst are equal}.}
+\caption{\textbf{Fst}.}
 \label{fig:fsttime.png}
 \end{figure}
 
@@ -432,7 +432,7 @@ $F\textsubscript{st}$ was calculated for each replicates of each scenario. Figur
 \centering
 \includegraphics[width=1.00\textwidth]{fig/tabvcftoolsvgpop.png}
 \decoRule
-\caption{\textbf{Fig:valure of Fst are equal}.}
+\caption{\textbf{Fst}.}
 \label{fig:fsttime.png}
 \end{figure}
 
@@ -441,15 +441,58 @@ $F\textsubscript{st}$ was calculated for each replicates of each scenario. Figur
 
 
 
-
+\newpage
 \section{Application of \vgp to real data: allele frequencies at variable loci of the HLA region}
 
-HLA is an highly polymorphic region of the genome and it is particularly difficult to assemble with linear methods. The HLA region represent a typical case in which the use of pangenomes can improve the mappability of the sequence reads and the discovery of genomic variants \cite{chin2019diploid}.
-%referenza tesi Erik HLA
-%calcolare sul vcf frequenze alleliche con vcftools
-%Pangenomic methods allow us to relate all genomes or sequences in our analysis directly to each other. One of the most polymorphic parts of the genome is the HLA region and for this thing I chose this region.
+HLA is an highly polymorphic region of the genome and it is particularly difficult to assemble with linear methods. The HLA region represent a typical case in which the use of pangenomes can improve the mappability of the sequence reads and the discovery of genomic variants \cite{chin2019diploid}.I considered three genes of the HLA region, \textit{HLA-E}, and \textit{HLA-DMA}, and \textit{HLA-C}.\\
 
-PAngenome Class I E gene  bp long 9 sequences  ENSEMBL 
+\textit{HLA-E} belongs to non-classical MHC class I (MHC Ib) genes. HLA-E protein shares high structural and functional homology with other MHC class I molecules. \textit{HLA-E} is expressed on most nucleated cells of the human body. However, surface expression of HLA-E protein was found in a restricted set of tissues. In particular, it has been found on leukocytes,endothelium, and cells of the trophoblast\cite{kanevskiy2019dimorphism}.
+
+The protein coded by the MHC class II gene \textit{HLA-DMA} function in the loading of peptides on class II molecules. Like the class II genes, the \textit{HLA-DMA} gene contains upstream regulatory sequences similar to the S-X-Y regulatory region as well as additional putative regulatory sites \cite{westerheide1997hla}.
+%The MHC class II homologous  proteins HLA-DMA and HLA-DMB  function in the loading of peptides  onto class II molecules. like the class II genes, the HLA-DM genes contain  upstream  regulatory sequences similar  to  the S-X-Y regulatory  region as well as additional putative regulatory sites.\cite{westerheide1997hla}
+
+The product of the \textit{HLA-C} gene belongs to the HLA class I heavy chain paralogues. This class I molecule is a heterodimer consisting of a heavy chain and a light chain (beta-2 microglobulin). The heavy chain is anchored in the membrane. Class I molecules play a central role in the immune system by presenting peptides derived from endoplasmic reticulum lumen. They are expressed in nearly all cells\cite{HLA-C}\\
+
+For these three genes I started from eleven (HLA-DMA), nine (HLA-E), and ten (HLA-C) sequences downloaded from GenBank (Table MATERIALI). I used the sequences to reconstruct the pangenomes as described in the methods. The pangenomes of HLA-E and HLA-DMA are less complex compared to the pangenome of HLA-C, suggesting less diversity in these two genes compared to HLA-C Figure (\ref{fig:pangenomesHLA.png}).  In the pangenome in Figure \ref{fig:pangenome.pdf}A, the first row is the randomly chosen reference sequence while the other rows are the other eight sequences (paths).
+ 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.00\textwidth]{fig/pangenomes.png}
+\decoRule
+\caption{\textbf{Pangenomes of the HLA-E (A), HLA-DMA (B), HLA-C (C).} Colors represent different sequences. Vertical white lines indicate variable sites. Chunks in full color represent invariable region of teh sequence}
+\label{fig:pangenomesHLA.png}
+\end{figure}
+
+
+
+
+Fig: (\ref{fig:pangenome.pdf}A)  for the column in white: first row represent REF, the left node in the REF there isn't in six path, in fact for calculate allele frequencies six paths are divided with 9, the result is 0.66 (\ref{tab:gfa2freqandvcf}first row).
+
+The same for the second column, left node there aren't in 5 paths, and for calculate allele frequencies I divided 5 paths for the total of paths i.e  9, the result is 0.56.
+
+
+
+
+
+I then calculated the allele frequencies at variable sites directly from the pangenome using the \textit{gfa2allelefreq} of the \vgp. library. This calculation starts with the detection of variable sites (bubbles) with \bbp, and then the allele frequencies are calculated as the number of paths supporting the variant node divided by total number of paths.\\
+
+%aggiungere fig 5.11 bubble per B e C
+
+\textit{gfa2allelefreq} founds four variable sites in nine sequences for the HLA-E gene and nine variable sites in eleven sequences for the HLA-DMA gene. \textit{gfa2allelefreq} was not able instead to process the HLA-C pangenome because of its complexity, suggesting  
+that an addition to current algorithm is required to handle complex bubbles (Figure  una bubble da HLA-E una bubble complessa da HLA-C).   
+
+
+
+
+
+
+and for the first time I calculate \textit{gfa2vcf}, I convert with odgi GFAformat in an odgiformat. I applicate this function and I obtained VCF.
+
+
+
+PAngenome Class I E gene  bp long 9 sequences  ENSEMBL
+
+Pangenome class I DMA gene 11 sequences
 
 I calculated allele frequency at variable sites in the HLA region from a pangenome obtained 
 
@@ -457,30 +500,6 @@ I calculated allele frequency at variable sites in the HLA region from a pangeno
 I applicate two functions of \vgp to pangenomes of HLA. In particular I calculate \textit{gfa2vcf} and \textit{gfa2allelefreq}.
 
 \subsection{Pangenome HLA}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=1.10\textwidth]{fig/pangenomeHLA.png}
-\decoRule
-\caption{\textit{pangenome}. Is represented a piece of pangenome of HLA, the first row represent Reference and the other rows represent another paths. (\textbf{A}). Zoom for the first column  (\textbf{B}), zoom the second column(\textbf{C})}
-\label{fig:pangenome.pdf}
-\end{figure}
-
-HLA-E is encoded by the major histocompatibility complex (MHC) locus and belongs to non-classical MHC class I (MHC Ib) genes. HLA-E protein shares high structural and functional homology with other MHC class I molecules. HLA-E is expressed on most nucleated cells of the human body. However, surface expression ofHLA-E protein was found in a restricted set of tissues. In particular, it has been found on leukocytes,endothelium, and cells of trophoblast.\cite{kanevskiy2019dimorphism} 
-
-
-
-
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=1.20\textwidth]{fig/C-3107.sort.odgi.png}
-\decoRule
-\caption{\textit{pangenome}.Gene con inserzioni,SNP, regione molto complessa}
-\label{fig:pangenome.pdf}
-\end{figure}
-
 
 \subsection{gfa2vcf}
 
@@ -508,27 +527,32 @@ This calculation start with \textit{bubblepop}, after detection of  bubble I cal
 In this figure ((\ref{fig:pangenome.pdf})A), the first row of the figure represent reference and other rows paths.
 Fig: (\ref{fig:pangenome.pdf}A)  for the column in white: first row represent REF, the left node in the REF there isn't in six path, in fact for calculate allele frequencies six paths are divided with 9, the result is 0.66 (\ref{tab:gfa2freqandvcf}first row).
 
-
 The same for the second column, left node there aren't in 5 paths, and for calculate allele frequencies I divided 5 paths for the total of paths i.e  9, the result is 0.56.
 
-
-%sequenze nel pangenoma sotto forma di lettere
-%sostituire A con pangenoma intero e provare con un gene famoso
 
 {\small
 \begin{table}
 \caption{gfa2freqandvcf}
 \label{tab:gfa2freqandvcf}
 \centering
-\begin{adjustbox}{width=1.00\textwidth}
-\begin{tabular}{c c c c c}
+\begin{adjustbox}{width=0.70\textwidth}
+\begin{tabular}{c c c c c c}
 \toprule
-\tabhead{CHROM} & \tabhead{POS} & \tabhead{REF} & \tabhead{ALT} & \tabhead{FREQ} \\
+\tabhead {GENE} & \tabhead{CHROM} & \tabhead{POS} & \tabhead{REF} & \tabhead{ALT} & \tabhead{FREQ} \\
 \midrule
-gi|568815592:30489405-30494204 & 551 & 	T & C & 0.67\\
-gi|568815592:30489405-30494204 & 883 & G & A & 0.56\\
-gi|568815592:30489405-30494204 & 1141 & T & A & 0.11 \\
-gi|568815592:30489405-30494204 & 3904 & G & A & 0.67\\
+HLA-E & HLAE-3133 & 551 & T & C & 0.67\\
+HLA-E & HLAE-3133 & 883 & G & A & 0.56\\
+HLA-E & HLAE-3133 & 1141 & T & A & 0.11\\
+HLA-E & HLAE-3133 & 3904 & G & A & 0.67\\
+HLA-DMA & HLADMA-3108 & 310  & C & T & 0.36\\
+HLA-DMA & HLADMA-3108 & 3288 & C & G & 0.09\\
+HLA-DMA & HLADMA-3108 & 2372 & G & A & 0.272\\
+HLA-DMA & HLADMA-3108 & 3512 & C & T & 0.18\\
+HLA-DMA & HLADMA-3108 & 3135 & G & A & 0.18\\
+HLA-DMA & HLADMA-3108 & 1155 & C & T & 0.09\\
+HLA-DMA & HLADMA-3108 & 1023 & G & A & 0.09\\
+HLA-DMA & HLADMA-3108 & 2844 & CCT & C & 0.18\\
+HLA-DMA & HLADMA-3108 & 1468 & A   & G & 0.09\\
 \bottomrule\\
 \end{tabular}
 \end{adjustbox}
@@ -536,13 +560,28 @@ gi|568815592:30489405-30494204 & 3904 & G & A & 0.67\\
 }
 
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.10\textwidth]{fig/pangenomeHLA.png}
+\decoRule
+\caption{\textit{pangenome}. Is represented a piece of pangenome of HLA-E, the first row represent Reference and the other rows represent another paths. (\textbf{A}). Zoom for the first column  (\textbf{B}), zoom the second column(\textbf{C})}
+\label{fig:hla-e.pdf}
+\end{figure}
 
-HLA semlice ma un po' più complesso
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1.20\textwidth]{fig/DMA-3108.png}
+\decoRule
+\caption{\textit{pangenome}. Is represented a piece of pangenome of HLA of DMA-3108 gene, the first row represent Reference and the other rows represent another paths. (\textbf{A}). Zoom for the first column  (\textbf{B}), zoom the second column(\textbf{C})}
+\label{fig:pangenome.pdf}
+\end{figure}
 
 
 
 
 
 
-
+%colonna gene, chr diventa pangenome HLA-E, HLA-DMA
 
