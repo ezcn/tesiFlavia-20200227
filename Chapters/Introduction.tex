@@ -51,7 +51,7 @@ To overcome these limitations, research is now pointing towards \textit{third ge
 
 Standard approaches in sequence analysis relate sequences to a single linear reference genome. Sequence fragments produced by NGS are mapped and assembled against a reference genome, and genetic variants are identified through comparison with it. While this is an efficient way of processing sequence information, the approach has a fundamental problem, i.e. substantial difference from the reference sequence are hard to observe and describe. This phenomenon is defined as \textit{reference bias}, i.e.  DNA fragments carrying the reference allele will be more likely to map successfully, or receive higher quality scores compared to alternate alleles \cite{eizenga2020pangenome}.
 
-
+As pangenome we refer to the entire set of genomic elements in a given species or clade.
 Pangenomic methods allow us to overcome limitations of the use of the reference genomes, relating all genomes directly to each other. In pangenomic approaches, sequence and variation are combined. This practice is still new, and research into ways to design, implement, and apply this model is ongoing \cite{eizenga2020pangenome}.
 To guide my exposition of these methods, I will refer to (Figure \ref{fig:genomevspangenome.png}).
 
@@ -65,7 +65,7 @@ Some regions of some genomes (\ref{fig:genomevspangenome.png} b) are unalignable
 
 %A collection of sequences representing a pangenome (\ref{fig:genomevspangenome.png} c). Multiple sequence alignment of the sequences captures their mutual relationships (\textbf{ii}).
 
-In a de Bruijn graph (\ref{fig:genomevspangenome.png} d), sequences are represented without bias, but the overall structure of the graph depends on a fixed parameter $k$, and repeats of sequences of this length will cause a collapse in the overall structure of the graph.
+In a de Bruijn graph (\ref{fig:genomevspangenome.png} d), sequences are represented without bias, but the structure of the graph depends on a fixed parameter $k$, and repeats of sequences of this length will cause a collapse in the overall structure of the graph.
 Despite this limitation, variants with unique $k$-contexts will be represented in structures in the graph structures (\textbf{ii}).
 An acyclic sequence graph is equivalent to the multiple sequence alignment (\textbf{iii}).
 A generic sequence graph can compactly represent a structural variant (shown in orange), using edges between the forward and reverse strands of the graph to indicate the presence of an inversion.
