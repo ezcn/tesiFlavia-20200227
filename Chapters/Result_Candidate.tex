@@ -509,27 +509,27 @@ that an addition to current algorithm is required to handle complex bubbles. %(F
 
 {\small
 \begin{table}
-\caption{gfa2freqandvcf}
+\caption{\textbf{Allele frequencies at variable sites within the \textit{HLA-E} and \textit{HLA-DMA} genes.} The column POSITION refers to the position in the pangenome. The variant in position 2844 of the \textit{HLA-DMA} pangenome is a deletion, also represented in Figure \ref{fig:hla-dma.pdf}C} 
 \label{tab:gfa2freqandvcf}
 \centering
 \begin{adjustbox}{width=0.70\textwidth}
 \begin{tabular}{c c c c c c}
 \toprule
-\tabhead {GENE} & \tabhead{CHROM} & \tabhead{POS} & \tabhead{REF} & \tabhead{ALT} & \tabhead{FREQ} \\
+\tabhead {GENE} & \tabhead{PANGENOME} & \tabhead{POSITION} & \tabhead{REF} & \tabhead{ALT} & \tabhead{FREQ} \\
 \midrule
-HLA-E & HLAE-3133 & 551 & T & C & 0.67\\
-HLA-E & HLAE-3133 & 883 & G & A & 0.56\\
-HLA-E & HLAE-3133 & 1141 & T & A & 0.11\\
-HLA-E & HLAE-3133 & 3904 & G & A & 0.67\\
-HLA-DMA & HLADMA-3108 & 310  & C & T & 0.36\\
-HLA-DMA & HLADMA-3108 & 3288 & C & G & 0.09\\
-HLA-DMA & HLADMA-3108 & 2372 & G & A & 0.272\\
-HLA-DMA & HLADMA-3108 & 3512 & C & T & 0.18\\
-HLA-DMA & HLADMA-3108 & 3135 & G & A & 0.18\\
-HLA-DMA & HLADMA-3108 & 1155 & C & T & 0.09\\
-HLA-DMA & HLADMA-3108 & 1023 & G & A & 0.09\\
-HLA-DMA & HLADMA-3108 & 2844 & CCT & C & 0.18\\
-HLA-DMA & HLADMA-3108 & 1468 & A   & G & 0.09\\
+\textit{HLA-E} & HLAE-3133 & 551 & T & C & 0.67\\
+\textit{HLA-E} & HLAE-3133 & 883 & G & A & 0.56\\
+\textit{HLA-E} & HLAE-3133 & 1141 & T & A & 0.11\\
+\textit{HLA-E} & HLAE-3133 & 3904 & G & A & 0.67\\
+\textit{HLA-DMA} & HLADMA-3108 & 310  & C & T & 0.36\\
+\textit{HLA-DMA} & HLADMA-3108 & 3288 & C & G & 0.09\\
+\textit{HLA-DMA} & HLADMA-3108 & 2372 & G & A & 0.272\\
+\textit{HLA-DMA} & HLADMA-3108 & 3512 & C & T & 0.18\\
+\textit{HLA-DMA} & HLADMA-3108 & 3135 & G & A & 0.18\\
+\textit{HLA-DMA} & HLADMA-3108 & 1155 & C & T & 0.09\\
+\textit{HLA-DMA} & HLADMA-3108 & 1023 & G & A & 0.09\\
+\textit{HLA-DMA} & HLADMA-3108 & 2844 & CCT & C & 0.18\\
+\textit{HLA-DMA} & HLADMA-3108 & 1468 & A   & G & 0.09\\
 \bottomrule\\
 \end{tabular}
 \end{adjustbox}
@@ -541,10 +541,7 @@ HLA-DMA & HLADMA-3108 & 1468 & A   & G & 0.09\\
 \centering
 \includegraphics[width=0.80\textwidth]{fig/HLA-E.png}
 \decoRule
-\caption{\textbf{Variable sites within the pangenome of the \textit{HLA-E} gene obtained from nine sequences.} Panel \textbf{A} shows the whole gene length, while panels \textbf{B} and \textbf{C} are zooms of two variable sites. In the linear representations each line is a sequence, the top one being the randomly chosen reference. Chunks in full color represent invariable parts of the genome while white vertical rows represent variable sites. In panels \textbf{B} and \textbf{C}  
-
-
-Is represented a piece of pangenome of HLA-E, the first row represent Reference and the other rows represent another paths. (). Zoom for the first column  }
+\caption{\textbf{Variable sites within the pangenome of the \textit{HLA-E} gene obtained from nine sequences.} Panel \textbf{A} shows the whole gene length, while panels \textbf{B} and \textbf{C} are zooms of two variable sites. In the linear representations each line is a sequence, the top one being the randomly chosen reference. Chunks in full color represent invariable parts of the genome while white vertical rows represent variable sites. In panels \textbf{B} and \textbf{C} variable sites are also represented as graphs with paths.}
 \label{fig:hla-e.pdf}
 \end{figure}
 
@@ -554,7 +551,7 @@ Is represented a piece of pangenome of HLA-E, the first row represent Reference 
 \centering
 \includegraphics[width=0.80\textwidth]{fig/HLA-DMA.png}
 \decoRule
-\caption{\textit{pangenome}. Is represented a piece of pangenome of HLA of DMA-3108 gene, the first row represent Reference and the other rows represent another paths. (\textbf{A}). Zoom for the first column  (\textbf{B}), zoom the second column(\textbf{C})}
+\caption{\textbf{Variable sites within the pangenome of the \textit{HLA-DMA} gene obtained from nine sequences.} Same scheme as in Figure \ref{fig:hla-e.pdf}. The variant detailed in panel \textbf{C} is a deletion.}
 \label{fig:hla-dma.pdf}
 \end{figure}
 
