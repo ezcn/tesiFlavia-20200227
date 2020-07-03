@@ -234,7 +234,29 @@ Path an ordered list of oriented segments, where each consecutive pair of orient
 
 \end{itemize}
 
-\section{HLA}
+\section{Population genomics}
+
+Population genomics is the study of the causes and the consequences of genetic variability within and among populations. Population genomics is based on the study of variable sites and the accuracy of the inferences made by population genomics analyses is strictly correlated to the amount of information on genetic variation. For this reason, the field of population genomics has been particularly active in the last ten years, due to the unprecedented availability of genomic sequences that made possible the identification of millions of novel genetic variants. \\ 
+
+Within humans, the first large-scale project that made use of whole-genome sequencing was the 1000 genomes project that used a combination of low-coverage whole-genome sequencing (WGS), deep exome sequencing, and dense microarray of 2,504 individuals from 26 populations \cite{1000genome2015global}. 
+This project showed that two individuals differ at roughly  0.6\% of their genome, that corresponds at 20 millions base pairs at 4.1-5.0 million sites in a genome of 3.2 giga base (Figure \ref{fig:1000genome_grid}).\\ 
+
+A more recent study identifies 67.3 million single-nucleotide polymorphisms (SNPs), 8.8 million small insertions or deletions (indels) and 39,997 copy number variants (CNVs) in 929 genomes. The technology used was high-coverage whole-genome sequencing (at 35X) \cite{bergstrom2019insights}. The number of variants identified by this study is comparable to the one identified by the 1000 genome project despite the lower sample size because the high-coverage sequencing increased the sensitivity. Furthermore, this study also identified 1.3 million polymorphic SNPs shared between archaic human genomes.\\
+
+%%%%%FIGURE 2.4
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{fig/1000genome_grid.png}
+\decoRule
+\caption{\textbf{a}, Polymorphic variants within sampled populations. The area of each pie is proportional to the number of polymorphisms within a population. Pies are divided into four slices, representing variants private to a population (darker colour unique to population), private to a continental area (lighter colour shared across continental group), shared across continental areas (light grey), and shared across all continents (dark grey). Dashed lines indicate populations sampled outside of their ancestral continental region. \textbf{b}, The number of variant sites per genome. \textbf{c}, The average number of singletons per genome."\textit{Adapted from} \cite{1000genome2015global}}
+\label{fig:1000genome_grid}
+\end{figure}
+
+Despite the major achievements described in the previous paragraphs, many of these results are based on very simple genomic variants and a very few population genomics studies have taken in consideration complex structural variants so far. %MAGARI REFERNZA 
+This is mostly due to the inability to have reliable data set of complex structural variants, a limitation that is now being tackled by the use of pangenomes.
+
+\section{The Human Leukocyte Antigen (HLA) genomic region}
 
 \begin{figure}[H]
 \centering
@@ -244,18 +266,12 @@ Path an ordered list of oriented segments, where each consecutive pair of orient
 \label{fig:HLA.png}
 \end{figure}
 
-
-
-
 The human major histocompatibility complex (MHC) or human leukocyte antigen (HLA) is a locus composed of closely linked polymorphic genes that code for cell surface proteins essential for the adaptive immune system. It contains several gene clusters coding surface heterodimeric proteins, which are anchored to the plasma membrane and are responsible for antigen presentation to T cells, a stage that is followed by the development of an adaptive immune response. MHC proteins are subdivided into class I, class II, and class III (the complement system) \cite{campbell1993map}. Many genetic diseases are caused by mutations in this region \cite{tiwari2012hla}.  
 
 
 The HLA region (Fig.\ref{fig:HLA.png}) is located on the short arm of chromosome 6 from 6p21.1 to p21.3 in a region spanning 7Mb. The class II region includes genes for the $\alpha$ and $\beta$ chains of the MHC class II molecules HLA-DR, HLA-DP and HLA-DQ. In addition, the genes encoding the DM$\alpha$ and DM $\beta$ chains, as well as the genes encoding the $\alpha$ and $\beta$ chains of the DO molecule (DO $\alpha$ and DO $\beta$, respectively), are also located in the MHC class II region.
 
+In the latest version of the human reference genome (GRCh38), there are several alternate loci where the sequence variation is too complex to be represented with a single sequence \cite{eggertsson2017graphtyper}. These loci are generally highly polymorphic, and many are known to co-segregate with disease and are therefore of great interest in population genetics. The most prominent example, the HLA region, is known to associate with a number of human diseases. 
 
+Short-read sequencing is the standard in genome-wide sequence analysis. Most common approaches for discovering sequence variants involve aligning sequence reads to a reference genome \cite{li2009fast} and searching for variants as alternative sequences in read alignments. However, some reads cannot be aligned to a reference genome, particularly those originating from highly polymorphic regions and regions absent from the reference genome.\\
 
-
-
-In the latest version of the human reference genome (GRCh38), there are several alternate loci where the sequence variation is too complex to be represented with a single sequence \cite{eggertsson2017graphtyper}. These loci are generally highly polymorphic, and many are known to co-segregate with disease and are therefore of great interest in population genetics. The most prominent example, the HLA region, is known to associate with a number of human diseases . 
-
-Short-read sequencing is the standard in genome-wide sequence analysis. Most common approaches for discovering sequence variants involve aligning sequence reads to a reference genome \cite{li2009fast} and searching for variants as alternative sequences in read alignments. However, some reads cannot be aligned to a reference genome, particularly those originating from highly polymorphic regions and regions absent from the reference genome.

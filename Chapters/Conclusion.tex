@@ -9,10 +9,47 @@
  %Discute il significato dei risultati ottenuti dal candidato nell’ambito della problematica e della letteratura scientifica di riferimento, delineando i possibili sviluppi futuri del progetto di ricerca.
 
 
-In this thesis, I have presented the results of my project to develop a library for population genetic analyses based on pangenome graphs.
-to work is preliminary, but demonstrates the feasibility of computing population genetic parameters from pangenomes.
+In this thesis, I have presented the results of my project to develop \vgp, a library for population genetic analyses based on pangenome graphs.
 
-haplotype homozygosity (nSL, iHS), allele
-frequency differentiation between populations (PBS, di, Fst) and measures of genetic
-diversity within groups (Tajima’s D)
- 
+
+\section{Significance}
+% a restatement of your research question, followed by a statement about whether or not, and how much, your findings "answer" the question.  These should be the first two pieces of information the reader encounters.
+The use of pangenomes and variation graphs is one of the major changes in genomics. Because this approach is quite recent, there has been little focus on developing software for population genetic analyses, and in fact almost all the already available software is based on genomic data in the linear format. Whit my project I contributed to fill this gap by writing software for population genetic analyses able to deal with pangenomes. \\
+
+
+% Relate your findings to the issues you raised in the introduction. Note similarities, differences, common or different trends.  Show how your study either corraborates, extends, refines, or conflicts with previous findings.
+\vgp is 
+
+
+In my project I chose to focus in the HLA region as it is one of the 
+
+%If you have unexpected findings, try to interpret them in terms of method, interpretation, even a restructured hypothesis; in extreme cases, you may have to rewrite your introduction. Be honest about the limitations of your study.
+
+
+
+%State the major conclusions from your study and present the theoretical and practical implications of your study.
+
+
+
+
+\section{Impact and future perspectives}
+This work is preliminary, but demonstrates the feasibility of computing population genetic parameters from pangenomes stored in this manner. To my knowledge, this is the first such exploration that has been undertaken in the scope of this representation.
+
+In this thesis, I demonstrated the calculation of allele frequencies and Fst for genomes embedded in variation graphs.
+My work suggests a series of follow-up studies to extend related population genetic metrics to pangenome models.
+I hope to explore the development of haplotype-based scans for genetic selection, like nSL, iHS, and xp-ehh to pangenome graphs.
+These could be built on top of efficient data structures to represent collections of genomes within the graph \cite{Siren_2019}.
+Similarly, in addition to Fst, other measures of frequency differentiation between populations could be applied to alleles in bubbles in the graph, including PBS. %, di.
+It would be straightforward to extend classical measures of diversity within groups, such as Tajima's D \cite{korneliussen2013calculation}, to work on these data structures.
+
+Developing these other approaches would be a significant effort.
+But, it would yield a system capable of handling the difficult problems this field will face in the near future, as we collect many whole genomes from individuals of diverse species.\\
+Importantly, these tools will not only help us confront the new data challenges.
+
+
+%ampliare 
+They will also ensure that we can easily easily consider all types of variation in population genetic analyses.\\
+
+
+%pensierini sparsi 
+The project is part of a new research line of the host laboratory and is going to be developed in collaboration with the UCSC. This gave me the opportunity to be part of an international collaborative team ... 

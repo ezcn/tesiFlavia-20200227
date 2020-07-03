@@ -7,34 +7,31 @@
 %----------------------------------------------------------------------------------------
 % Define some commands to keep the formatting separated from the content 
 
+\section{Tools for pangenomes construction and manipulation }
 
-\section{Bubblepop} 
+vg odgi.. ch ealtro hai usato? 
+
 \subsection{Odgi}
 
-I built the \textit{bubblepop} function utilizing the odgi library(\cite{eizenga2020succinct}).
+I built the \textit{bubblepop} function using the Optimized Dynamic Graph Implementation (odgi) library \cite{eizenga2020succinct}. odgi is based on a node centric encoding of the graph that is designed to improve cache coherency when traversing or modifying the graph. This encoding is split between graph topology and paths, which is important for achieving a good balance of run time performance and memory usage on real-world graphs with large path sets. Each node’s sequence and edges are encoded in a byte array using a variable-length integer encoding scheme. Edges are described in terms of a relative offset between the rank of this node in the sorted array of nodes of the graph and the node to which the edge arrives. OMETTERE UNA FIGURA O MORTE !!! ERRRRRRIIIIIKKKK 
 
-odgi (Optimized Dynamic Graph Implementation) is based on a node centric encoding of the graph that is designed to improve cache coherency when traversing or modifying the graph. This encoding is split between graph topology and paths, which is important for achieving a good balance of run time performance and memory usage on real-world graphs with large path sets. Each node’s sequence and edges are encoded in a byte array using a variable-length integer encoding scheme. Edges are described in terms of a relative offset between the rank of this node in the sorted array of nodes of the graph and the node to which the edge arrives.
 
-The first step is convert the graph in GFA format in a graph in odgi format with:
+\section{Implementation of the \vgp library}
+\subsection{\bbp code}
 
+\bbp is the core function of \vgp and is written in the Python programming language. While the whole code is available on GitHub at LINK, here I will summarize the main steps of the algorithm. \\
+
+The first step uses odgi and consist in converting the graph from GFA to odgi format: 
 \begin{verbatim}
+g=odgi.graph()  ##initialize the graph object
 odgi build -g graph.gfa -o graph.og
-\end{verbatim}
+\end{verbatim}\\
 
-Before executing any of the following commands, initialize the graph object with:
+After the GFA is loaded, the second step is the application of two recursive algorithms: the Depth first Search (DFS), a recursive algorithm for searching all the vertices of a graph or tree data structure \cite{GIUSTA CITAZIONE } and the Breadth first Search (BFS), a recursive algorithm for searching all the vertices of a tree data structure \cite{GIUSTACITAZIONE}. E quale e' la differenza tra BFS  e DFS? ERIK \\
 
-\begin{verbatim}
-g=odgi.graph()
-\end{verbatim}
-
-Start this function after load GFA, with use two recursive algorithms. 
-
-\subsection{DFS}
-Depth first Search is a recursive algorithm for searching all the vertices of a graph or tree data structure.
+\noindent
 The DFS algorithm works as follows:
-
 \begin{verbatim}
-
 def dfs(graph, start, visited=None):
     if visited is None:
         visited = set()
@@ -43,13 +40,10 @@ def dfs(graph, start, visited=None):
     for next in graph[start] - visited:
         dfs(graph, next, visited)
     return visited
+\end{verbatim}\\
 
-\end{verbatim}
-
-\subsection{BFS}
-Breadth first Search is a recursive algorithm for searching all the vertices of a tree data structure.
-This algorithm works as follows:
-
+\noindent
+The BFS works as follows:
 \begin{verbatim}
 def bfs(graph, root): 
     visited, queue = set(), collections.deque([root])
@@ -60,15 +54,15 @@ def bfs(graph, root):
             if neighbour not in visited: 
                 visited.add(neighbour) 
                 queue.append(neighbour) 
-\end{verbatim}
+\end{verbatim}\\
 
-I implement this algoritm that is availabe on the git repository of the project. 
+I implement this algoritm that is availabe on the git repository of the project. LE FUNZIONI MESSE PRIMA SONO GENERALI O SONO QUELLE CHE HAI SCRITTO TU? AGGIUNGERE UNA FRASETTA PIU' SPECIFICA SU QUELLO CHE FAI, PER ESEMPIO ALL'INTERNO DEI LOOPS 
 
 %citare: https://www.programiz.com/dsa/graph-bfs 
 
-\subsection{BubblesCalling}
+\subsubsection{\bbc code}
 
-After BFS I continue with a key point of a code, dictionary that identify start and end of bubbles Fig:({\ref{fig:bubblepop.png}}).\\
+The key step of the \bbc code is the identification of the start and end of the bubbles (Figure \ref{fig:bubblepop.png}).\\
 
 For define start and end, I calculate distance of node in the three obtained with BFS from root, the chose of root is arbitrary. I use two lists: distance from root and ordinary nodes with the same distance.
 Key of a dictionary represent distance and value nodes with the same distance. 
